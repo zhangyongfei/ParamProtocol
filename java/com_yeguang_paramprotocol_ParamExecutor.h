@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_yeguang_paramprotocol_ParamExecutor
  * Method:    AddFunction
- * Signature: (Lcom/yeguang/paramprotocol/ExecuteInterface;)V
+ * Signature: (Ljava/lang/String;Lcom/yeguang/paramprotocol/ExecuteInterface;)V
  */
 JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamExecutor_AddFunction
-  (JNIEnv *, jobject, jobject);
+  (JNIEnv *, jobject, jstring, jobject);
 
 #ifdef __cplusplus
 }

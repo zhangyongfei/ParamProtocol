@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_yeguang_paramprotocol_ParamSocket
  * Method:    Create
- * Signature: ()V
+ * Signature: (Lcom/yeguang/paramprotocol/ParamCallback;)V
  */
 JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_Create
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jobject);
 
 /*
  * Class:     com_yeguang_paramprotocol_ParamSocket

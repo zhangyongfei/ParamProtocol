@@ -19,7 +19,7 @@ yeguang::ParamSocket *GetSocket(JNIEnv *env, jobject obj)
 {
 	// call Lcom/yeguang/paramprotocol/ParamSocket; getSock
 	jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamSocket;",
-		"getSock", "(V)V");
+		"getSock", "(V)J");
 
 	yeguang::ParamSocket *sock = (yeguang::ParamSocket *)env->CallLongMethod(obj, mid);
 
@@ -144,28 +144,56 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 	return res;
 }
 
+
 int JniSendCallback(const char * const data, int data_len, void* context)
 {
-	JNIEnv *env;
+	JNIEnv *env = NULL;
 	GetJniEnv((void **)&env_);
+
+	jobject obj = (jobject)context;
+
+	jclass cls = env->GetObjectClass(obj);
+
+	jbyteArray byte_array = env->NewByteArray(data_len);
+	env->SetByteArrayRegion(byte_array, 0, data_len, (jbyte *)data);
+
+	jmethodID mid = GetMethod2(env, cls,
+		"SendCallback", "(V)[B");
+
+	env->CallLongMethod(obj, mid, byte_array);
+
+	return 0;
 }
 
 int JniRecvCallback(uint32_t function_id, yeguang::ParamArgs& args, void* context)
 {
+	JNIEnv *env;
+	GetJniEnv((void **)&env_);
 
+	return 0;
 }
 
 int JniCheckCallback(void* context)
 {
+	JNIEnv *env = NULL;
+	GetJniEnv((void **)&env_);
 
+	jobject obj = (jobject)context;
+
+	jclass cls = env->GetObjectClass(obj);
+
+	jmethodID mid = GetMethod2(env, cls,
+		"CheckCallback", "(V)V");
+
+	env->CallLongMethod(obj, mid);
+	return 0;
 }
-
 
 
 //////////////////////////////////////////////////////////////////////////
 
 
-JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void *reserved) //这是JNI_OnLoad的声明，必须按照这样的方式声明
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void *reserved) //这是JNI_OnLoad的声明，必须按照这样的方式声明
 {
 	jvm_ = vm;
 
@@ -180,12 +208,16 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void *reserved) //这是JNI_OnLoad的声明，必
 /*
  * Class:     com_yeguang_paramprotocol_ParamSocket
  * Method:    Create
- * Signature: ()V
+  * Signature: (Lcom/yeguang/paramprotocol/ParamCallback;)V
  */
 JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_Create
-  (JNIEnv *env, jobject obj)
+  (JNIEnv *env, jobject obj, jobject callback)
 {
 	yeguang::ParamSocket *sock = yeguang::ParamSocket::Create();
+
+	sock->SetSendCB(JniSendCallback, callback);
+	sock->SetCheckCB(JniCheckCallback, callback);
+	sock->SetRecvCB(JniRecvCallback, NULL);
 
 	// call Lcom/yeguang/paramprotocol/ParamSocket; setSock
 	jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamSocket;",

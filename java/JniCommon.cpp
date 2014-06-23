@@ -34,6 +34,21 @@ jmethodID GetMethod(JNIEnv *env,
 	return NULL;
 }
 
+jmethodID GetMethod2(JNIEnv *env, 
+					jclass cls,
+					const char* method, 
+					const char* args)
+{
+	if(cls == NULL)
+	{
+		return NULL;
+	}
+
+	jmethodID mid = env->GetMethodID(cls, method, args);
+
+	return NULL;
+}
+
 //jstring to char*
 char* jstringTostring(JNIEnv* env, jstring jstr)
 {        

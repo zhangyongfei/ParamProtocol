@@ -8,7 +8,7 @@ public class ParamSocket {
 		
 	}
 	
-	public native void Create();
+	public native void Create(ParamCallback callback);
 	public native void Destroy();
 	public native void CheckConn();
 	public native void InputData(byte[] data);

@@ -7,6 +7,11 @@ extern jmethodID GetMethod(JNIEnv *env,
 					const char* method, 
 					const char* args);
 
+extern jmethodID GetMethod2(JNIEnv *env, 
+					 jclass cls,
+					 const char* method, 
+					 const char* args);
+
 extern char* jstringTostring(JNIEnv* env, jstring jstr);
 extern jstring stoJstring(JNIEnv* env, const char* pat);
 extern uint32_t PthreadSelf();
