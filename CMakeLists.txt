@@ -26,7 +26,7 @@ ${CMAKE_CURRENT_LIST_DIR}
 ${CMAKE_CURRENT_LIST_DIR}/ParamArgs
 ${CMAKE_CURRENT_LIST_DIR}/Java)
 
-SharedLib(ParamArgs
+SharedLib(ParamProtocol
 SOURCE_LIST
 "")
 

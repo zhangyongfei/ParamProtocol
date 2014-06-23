@@ -29,9 +29,7 @@ jmethodID GetMethod(JNIEnv *env,
 		return NULL;
 	}
 
-	jmethodID mid = env->GetMethodID(cls, method, args);
-
-	return NULL;
+	return env->GetMethodID(cls, method, args);
 }
 
 jmethodID GetMethod2(JNIEnv *env, 
@@ -44,9 +42,7 @@ jmethodID GetMethod2(JNIEnv *env,
 		return NULL;
 	}
 
-	jmethodID mid = env->GetMethodID(cls, method, args);
-
-	return NULL;
+	return env->GetMethodID(cls, method, args);
 }
 
 //jstring to char*

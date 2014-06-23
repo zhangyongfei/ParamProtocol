@@ -19,7 +19,7 @@ yeguang::ParamSocket *GetSocket(JNIEnv *env, jobject obj)
 {
 	// call Lcom/yeguang/paramprotocol/ParamSocket; getSock
 	jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamSocket;",
-		"getSock", "(V)J");
+		"getSock", "()J");
 
 	yeguang::ParamSocket *sock = (yeguang::ParamSocket *)env->CallLongMethod(obj, mid);
 
@@ -29,7 +29,7 @@ yeguang::ParamSocket *GetSocket(JNIEnv *env, jobject obj)
 int GetArgsCount(JNIEnv *env, jobject args)
 {
 	jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArgs;",
-		"getCount", "(V)I");
+		"getCount", "()I");
 
 	return env->CallIntMethod(args, mid);
 }
@@ -39,12 +39,12 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 	bool res = false;
 
 	jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArgs;",
-		"getArg", "(V)Lcom/yeguang/paramprotocol/ParamArg;");
+		"getArg", "()Lcom/yeguang/paramprotocol/ParamArg;");
 
 	jobject arg = env->CallObjectMethod(args, mid);
 
 	mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
-		"getType", "(V)I");
+		"getType", "()I");
 
 	int type = env->CallIntMethod(arg, mid);
 
@@ -53,7 +53,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 	case CHARVALUE:
 		{
 			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
-				"getCharValue", "(V)C");
+				"getCharValue", "()C");
 
 			jchar tmpvalue = env->CallCharMethod(arg, mid);
 
@@ -63,7 +63,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 	case SHORTVALUE:
 		{
 			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
-				"getShortValue", "(V)S");
+				"getShortValue", "()S");
 
 			jshort tmpvalue = env->CallShortMethod(arg, mid);
 
@@ -73,7 +73,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 	case INTVALUE:
 		{
 			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
-				"getIntValue", "(V)I");
+				"getIntValue", "()I");
 
 			jint tmpvalue = env->CallIntMethod(arg, mid);
 
@@ -83,7 +83,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 	case LONGVALUE:
 		{
 			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
-				"getLongValue", "(V)J");
+				"getLongValue", "()J");
 
 			jlong tmpvalue = env->CallLongMethod(arg, mid);
 
@@ -93,7 +93,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 	case FLOATVALUE:
 		{
 			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
-				"getFloatValue", "(V)F");
+				"getFloatValue", "()F");
 
 			jfloat tmpvalue = env->CallFloatMethod(arg, mid);
 
@@ -103,7 +103,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 	case DOUBLEVALUE:
 		{
 			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
-				"getDoubleValue", "(V)D");
+				"getDoubleValue", "()D");
 
 			jdouble tmpvalue = env->CallDoubleMethod(arg, mid);
 
@@ -113,7 +113,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 	case STRINGVALUE:
 		{
 			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
-				"getStringValue", "(V)Ljava/lang/String;");
+				"getStringValue", "()Ljava/lang/String;");
 
 			jstring tmpvalue = (jstring)env->CallObjectMethod(arg, mid);
 
@@ -126,7 +126,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 	case BYTEARRAYVALUE:
 		{
 			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
-				"getByteArrayValue", "(V)[B");
+				"getByteArrayValue", "()[B");
 
 			jbyteArray tmpvalue = (jbyteArray)env->CallObjectMethod(arg, mid);
 
@@ -147,20 +147,38 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 
 int JniSendCallback(const char * const data, int data_len, void* context)
 {
+    printf("%s %d\n", __FILE__, __LINE__);
 	JNIEnv *env = NULL;
-	GetJniEnv((void **)&env_);
+	GetJniEnv((void **)&env);
+
+	printf("%s %d\n", __FILE__, __LINE__);
+
 
 	jobject obj = (jobject)context;
 
+	printf("obj:%p\n", obj);
+
 	jclass cls = env->GetObjectClass(obj);
+
+    printf("%s %d\n", __FILE__, __LINE__);
 
 	jbyteArray byte_array = env->NewByteArray(data_len);
 	env->SetByteArrayRegion(byte_array, 0, data_len, (jbyte *)data);
 
+	printf("%s %d\n", __FILE__, __LINE__);
+
+	printf("cls:%p\n", cls);
+
 	jmethodID mid = GetMethod2(env, cls,
-		"SendCallback", "(V)[B");
+		"SendCallback", "([B)V");
+
+	printf("%s %d\n", __FILE__, __LINE__);
+
+	printf("mid:%p\n", mid);
 
 	env->CallLongMethod(obj, mid, byte_array);
+
+	printf("%s %d\n", __FILE__, __LINE__);
 
 	return 0;
 }
@@ -168,7 +186,7 @@ int JniSendCallback(const char * const data, int data_len, void* context)
 int JniRecvCallback(uint32_t function_id, yeguang::ParamArgs& args, void* context)
 {
 	JNIEnv *env;
-	GetJniEnv((void **)&env_);
+	GetJniEnv((void **)&env);
 
 	return 0;
 }
@@ -176,14 +194,14 @@ int JniRecvCallback(uint32_t function_id, yeguang::ParamArgs& args, void* contex
 int JniCheckCallback(void* context)
 {
 	JNIEnv *env = NULL;
-	GetJniEnv((void **)&env_);
+	GetJniEnv((void **)&env);
 
 	jobject obj = (jobject)context;
 
 	jclass cls = env->GetObjectClass(obj);
 
 	jmethodID mid = GetMethod2(env, cls,
-		"CheckCallback", "(V)V");
+		"CheckCallback", "()V");
 
 	env->CallLongMethod(obj, mid);
 	return 0;
@@ -200,7 +218,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void *reserved) //这是JNI_OnLoad的
 	thrd_id_ = PthreadSelf();
 
 	if(vm->GetEnv((void**)&env_, JNI_VERSION_1_4) != JNI_OK) //从JavaVM获取JNIEnv，一般使用1.4的版本
-		    return -1;	 
+	    return -1;	 
 
 	return JNI_VERSION_1_4; //这里很重要，必须返回版本，否则加载会失败。
 }
@@ -219,9 +237,16 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_Create
 	sock->SetCheckCB(JniCheckCallback, callback);
 	sock->SetRecvCB(JniRecvCallback, NULL);
 
+	printf("obj:%p\n", callback);
+
 	// call Lcom/yeguang/paramprotocol/ParamSocket; setSock
 	jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamSocket;",
 		"setSock", "(J)V");
+
+	if(mid == NULL)
+	{
+	    return;
+	}
 
 	env->CallVoidMethod(obj, mid, (jlong)sock);
 }
@@ -292,16 +317,24 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_InputData
 JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_CallFunction
   (JNIEnv *env, jobject obj, jstring funname, jobject args)
 {
+	printf("%s %d\n", __FILE__, __LINE__);
+
 	yeguang::ParamSocket *sock = GetSocket(env, obj);
+
+	printf("%s %d\n", __FILE__, __LINE__);
 
 	if (sock == NULL)
 	{
 		return;
 	}
 
+	printf("%s %d\n", __FILE__, __LINE__);
+
 	char *name = jstringTostring(env, funname);
 	std::string strname = name;
 	free(name);
+
+	printf("%s %d\n", __FILE__, __LINE__);
 
 	int count = GetArgsCount(env, args);
 
@@ -317,5 +350,6 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_CallFunction
 		}
 	}
 
+	printf("%s %d\n", __FILE__, __LINE__);
 	sock->CallFunction(strname, params);
 }
