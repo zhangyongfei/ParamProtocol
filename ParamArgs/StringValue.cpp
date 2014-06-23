@@ -3,17 +3,17 @@
 
 namespace yeguang
 {
-	CStringValue::CStringValue()
+	StringValue::StringValue()
 	{
 
 	}
 
-	CStringValue::~CStringValue()
+	StringValue::~StringValue()
 	{
 
 	}
 
-	std::string CStringValue::ParseString(const char* const data)
+	std::string StringValue::ParseString(const char* const data)
 	{
 		if (data == NULL)
 		{
@@ -51,7 +51,7 @@ namespace yeguang
 		return tmp;
 	}
 
-	void CStringValue::PackageString(std::string value, char *const data, int &datalen)
+	void StringValue::PackageString(std::string value, char *const data, int &datalen)
 	{
 		if (datalen < (int)(8 + value.length() + 1 + sizeof(TValueStruct)))
 		{

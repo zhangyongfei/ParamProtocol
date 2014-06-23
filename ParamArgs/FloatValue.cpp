@@ -3,17 +3,17 @@
 
 namespace yeguang
 {
-	CFloatValue::CFloatValue()
+	FloatValue::FloatValue()
 	{
 
 	}
 
-	CFloatValue::~CFloatValue()
+	FloatValue::~FloatValue()
 	{
 
 	}
 
-	float CFloatValue::ParseFloat(const char* const data)
+	float FloatValue::ParseFloat(const char* const data)
 	{
 		if (data == NULL)
 		{
@@ -50,7 +50,7 @@ namespace yeguang
 		return tmp;
 	}
 
-	void CFloatValue::PackageFloat(float value, char *const data, int &datalen)
+	void FloatValue::PackageFloat(float value, char *const data, int &datalen)
 	{
 		if (datalen < (5 + sizeof(TValueStruct)))
 		{

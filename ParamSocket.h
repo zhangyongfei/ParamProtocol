@@ -29,7 +29,7 @@ public:
 
     int InputData(const char * const data, int data_len);
 
-    int SendArgs(std::string funname, ParamArgs& args);
+    int CallFunction(std::string funname, ParamArgs& args);
 
 protected:
     int Init();

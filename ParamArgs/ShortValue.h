@@ -4,11 +4,11 @@
 
 namespace yeguang
 {
-	class CShortValue
+	class ShortValue
 	{
 	public:
-		CShortValue();
-		~CShortValue();
+		ShortValue();
+		~ShortValue();
 
 		static int16_t ParseShort(const char* const data);
 

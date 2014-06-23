@@ -3,11 +3,11 @@
 
 namespace yeguang
 {
-	class CFloatValue
+	class FloatValue
 	{
 	public:
-		CFloatValue();
-		~CFloatValue();
+		FloatValue();
+		~FloatValue();
 
 		static float ParseFloat(const char* const data);
 

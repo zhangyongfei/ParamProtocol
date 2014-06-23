@@ -4,7 +4,7 @@
 #include <string>
 #include <stdexcept>
 #include <stdint.h>
-#if _MSC_VER <= 1500
+#ifdef WIN32
 #include <memory.h>
 #else
 #include <tr1/memory>
@@ -51,22 +51,26 @@ namespace yeguang
 		std::string  strvalue;
 	}TValueVar;
 
-	class CValueObject
+	class ValueObject
 	{
 	public:
-		CValueObject(const char *const data, int datalen);
+		ValueObject()
+		{
 
-		CValueObject(bool value);
-		CValueObject(char value);
-		CValueObject(int16_t value);
-		CValueObject(int value);
-		CValueObject(int64_t value);
-		CValueObject(float value);
-		CValueObject(double value);
-		CValueObject(const char * const value);
-		CValueObject(const uint8_t * const value, int valuelen);
+		}
+		ValueObject(const char *const data, int datalen);
 
-		~CValueObject();
+		ValueObject(bool value);
+		ValueObject(char value);
+		ValueObject(int16_t value);
+		ValueObject(int value);
+		ValueObject(int64_t value);
+		ValueObject(float value);
+		ValueObject(double value);
+		ValueObject(const char * const value);
+		ValueObject(const uint8_t * const value, int valuelen);
+
+		~ValueObject();
 
 		emValueType GetType();
 

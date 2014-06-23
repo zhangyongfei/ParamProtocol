@@ -4,17 +4,17 @@
 
 namespace yeguang
 {
-	CShortValue::CShortValue()
+	ShortValue::ShortValue()
 	{
 
 	}
 
-	CShortValue::~CShortValue()
+	ShortValue::~ShortValue()
 	{
 
 	}
 
-	int16_t CShortValue::ParseShort(const char* const data)
+	int16_t ShortValue::ParseShort(const char* const data)
 	{
 		if (data == NULL)
 		{
@@ -45,7 +45,7 @@ namespace yeguang
 		return tmp;
 	}
 
-	void CShortValue::PackageShort(int16_t value, char *const data, int &datalen)
+	void ShortValue::PackageShort(int16_t value, char *const data, int &datalen)
 	{
 		if (datalen < (3 + sizeof(TValueStruct)))
 		{

@@ -17,7 +17,7 @@ namespace yeguang
 		static TValueVar value;
 
 		value.valuetype = BOOLVALUE;
-		value.bvalue = CBooleanValue::ParseBoolean(data);
+		value.bvalue = BooleanValue::ParseBoolean(data);
 
 		return value;
 	}
@@ -27,7 +27,7 @@ namespace yeguang
 		static TValueVar value;
 
 		value.valuetype = CHARVALUE;
-		value.cvalue = CCharValue::ParseChar(data);
+		value.cvalue = CharValue::ParseChar(data);
 
 		return value;
 	}
@@ -37,7 +37,7 @@ namespace yeguang
 		static TValueVar value;
 
 		value.valuetype = SHORTVALUE;
-		value.svalue = CShortValue::ParseShort(data);
+		value.svalue = ShortValue::ParseShort(data);
 
 		return value;
 	}
@@ -47,7 +47,7 @@ namespace yeguang
 		static TValueVar value;
 
 		value.valuetype = INTVALUE;
-		value.ivalue = CIntValue::ParseInt(data);
+		value.ivalue = IntValue::ParseInt(data);
 
 		return value;
 	}
@@ -57,7 +57,7 @@ namespace yeguang
 		static TValueVar value;
 
 		value.valuetype = LONGVALUE;
-		value.lvalue = CLongValue::ParseLong(data);
+		value.lvalue = LongValue::ParseLong(data);
 
 		return value;
 	}
@@ -67,7 +67,7 @@ namespace yeguang
 		static TValueVar value;
 
 		value.valuetype = FLOATVALUE;
-		value.fvalue = CFloatValue::ParseFloat(data);
+		value.fvalue = FloatValue::ParseFloat(data);
 
 		return value;
 	}
@@ -77,7 +77,7 @@ namespace yeguang
 		static TValueVar value;
 
 		value.valuetype = DOUBLEVALUE;
-		value.dvalue = CDoubleValue::ParseDouble(data);
+		value.dvalue = DoubleValue::ParseDouble(data);
 
 		return value;
 	}
@@ -87,7 +87,7 @@ namespace yeguang
 		static TValueVar value;
 
 		value.valuetype = STRINGVALUE;
-		value.strvalue = CStringValue::ParseString(data);
+		value.strvalue = StringValue::ParseString(data);
 
 		return value;
 	}
@@ -97,12 +97,12 @@ namespace yeguang
         static TValueVar value;
 
         value.valuetype = BYTEARRAY;
-        value.bytearray = CByteArray::ParseByteArray(data);
+        value.bytearray = ByteArray::ParseByteArray(data);
 
         return value;
     }
 
-	CValueObject::CValueObject(const char *const data, int datalen)
+	ValueObject::ValueObject(const char *const data, int datalen)
 	{
 		if (data[2] == 1)
 		{
@@ -160,60 +160,60 @@ namespace yeguang
 		}
 	}
 
-	CValueObject::~CValueObject()
+	ValueObject::~ValueObject()
 	{
 
 	}
 
-	CValueObject::CValueObject(bool value)
+	ValueObject::ValueObject(bool value)
 	{
 		m_value.valuetype = BOOLVALUE;
 		m_value.bvalue = value;
 	}
 
-	CValueObject::CValueObject(char value)
+	ValueObject::ValueObject(char value)
 	{
 		m_value.valuetype = CHARVALUE;
 		m_value.cvalue = value;
 	}
 
-	CValueObject::CValueObject(int16_t value)
+	ValueObject::ValueObject(int16_t value)
 	{
 		m_value.valuetype = SHORTVALUE;
 		m_value.svalue = value;
 	}
 
-	CValueObject::CValueObject(int value)
+	ValueObject::ValueObject(int value)
 	{
 		m_value.valuetype = INTVALUE;
 		m_value.ivalue = value;
 	}
 
-	CValueObject::CValueObject(int64_t value)
+	ValueObject::ValueObject(int64_t value)
 	{
 		m_value.valuetype = LONGVALUE;
 		m_value.lvalue = value;
 	}
 
-	CValueObject::CValueObject(float value)
+	ValueObject::ValueObject(float value)
 	{
 		m_value.valuetype = FLOATVALUE;
 		m_value.fvalue = value;
 	}
 
-	CValueObject::CValueObject(double value)
+	ValueObject::ValueObject(double value)
 	{
 		m_value.valuetype = DOUBLEVALUE;
 		m_value.dvalue = value;
 	}
 
-	CValueObject::CValueObject(const char * const value)
+	ValueObject::ValueObject(const char * const value)
 	{
 		m_value.valuetype = STRINGVALUE;
 		m_value.strvalue = value;
 	}
 
-	CValueObject::CValueObject(const uint8_t * const value, int valuelen)
+	ValueObject::ValueObject(const uint8_t * const value, int valuelen)
 	{
 		m_value.valuetype = BYTEARRAY;
 
@@ -222,100 +222,100 @@ namespace yeguang
 		memcpy(m_value.bytearray.data.get(), value, valuelen);
 	}
 
-	emValueType CValueObject::GetType()
+	emValueType ValueObject::GetType()
 	{
 		return m_value.valuetype;
 	}
 
-	bool CValueObject::GetBoolean()
+	bool ValueObject::GetBoolean()
 	{
 		return m_value.bvalue;
 	}
 
-	char CValueObject::GetChar()
+	char ValueObject::GetChar()
 	{
 		return m_value.cvalue;
 	}
 
-	int16_t CValueObject::GetShort()
+	int16_t ValueObject::GetShort()
 	{
 		return m_value.svalue;
 	}
 
-	int32_t CValueObject::GetInt()
+	int32_t ValueObject::GetInt()
 	{
 		return m_value.ivalue;
 	}
 
-	int64_t CValueObject::GetLong()
+	int64_t ValueObject::GetLong()
 	{
 		return m_value.lvalue;
 	}
 
-	float CValueObject::GetFloat() 
+	float ValueObject::GetFloat() 
 	{
 		return m_value.fvalue;
 	}
 
-	double CValueObject::GetDouble()
+	double ValueObject::GetDouble()
 	{
 		return m_value.dvalue;
 	}
 
-	std::string CValueObject::GetString()
+	std::string ValueObject::GetString()
 	{
 		return m_value.strvalue;
 	}
 
-	int CValueObject::GetByteLength()
+	int ValueObject::GetByteLength()
 	{
 		return m_value.bytearray.datasize;
 	}
 
-    std::tr1::shared_ptr<uint8_t>& CValueObject::GetByteArray()
+    std::tr1::shared_ptr<uint8_t>& ValueObject::GetByteArray()
 	{
         return m_value.bytearray.data;
 	}
 
-	void CValueObject::GetData(char* const data, int& datalen)
+	void ValueObject::GetData(char* const data, int& datalen)
 	{
 		switch (m_value.valuetype)
 		{
 		case BOOLVALUE:
 			{
-				CBooleanValue::PackageBoolean(m_value.bvalue, data, datalen);
+				BooleanValue::PackageBoolean(m_value.bvalue, data, datalen);
 			}break;
 		case CHARVALUE:
 			{
-				CCharValue::PackageChar(m_value.cvalue, data, datalen);
+				CharValue::PackageChar(m_value.cvalue, data, datalen);
 			}break;
 		case SHORTVALUE:
 			{
-				CShortValue::PackageShort(m_value.svalue, data, datalen);
+				ShortValue::PackageShort(m_value.svalue, data, datalen);
 			}break;
 		case INTVALUE:
 			{
-				CIntValue::PackageInt(m_value.ivalue, data, datalen);
+				IntValue::PackageInt(m_value.ivalue, data, datalen);
 			}break;
 		case LONGVALUE:
 			{
-				CLongValue::PackageLong(m_value.lvalue, data, datalen);
+				LongValue::PackageLong(m_value.lvalue, data, datalen);
 			}break;
 		case FLOATVALUE:
 			{
-				CFloatValue::PackageFloat(m_value.fvalue, data, datalen);
+				FloatValue::PackageFloat(m_value.fvalue, data, datalen);
 			}break;
 		case DOUBLEVALUE:
 			{
-				CDoubleValue::PackageDouble(m_value.dvalue, data, datalen);
+				DoubleValue::PackageDouble(m_value.dvalue, data, datalen);
 			}break;
 		case STRINGVALUE:
 			{
-				CStringValue::PackageString(m_value.strvalue, data, datalen);
+				StringValue::PackageString(m_value.strvalue, data, datalen);
 			}break;
 		case BYTEARRAY:
 			{
-				CByteArray::PackageByteArray(m_value.bytearray, data, datalen);
+				ByteArray::PackageByteArray(m_value.bytearray, data, datalen);
 			}
 		default:
 			break;

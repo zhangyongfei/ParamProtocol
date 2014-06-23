@@ -4,11 +4,11 @@
 
 namespace yeguang
 {
-	class CCharValue
+	class CharValue
 	{
 	public:
-		CCharValue();
-		~CCharValue();
+		CharValue();
+		~CharValue();
 
 		static int8_t ParseChar(const char * const data);
 

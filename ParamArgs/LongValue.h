@@ -4,11 +4,11 @@
 
 namespace yeguang
 {
-	class CLongValue
+	class LongValue
 	{
 	public:
-		CLongValue();
-		~CLongValue();
+		LongValue();
+		~LongValue();
 
 		static int64_t ParseLong(const char * const data);
 

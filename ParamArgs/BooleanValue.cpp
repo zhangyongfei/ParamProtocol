@@ -5,17 +5,17 @@
 
 namespace yeguang
 {
-	CBooleanValue::CBooleanValue()
+	BooleanValue::BooleanValue()
 	{
 
 	}
 
-	CBooleanValue::~CBooleanValue()
+	BooleanValue::~BooleanValue()
 	{
 
 	}
 
-	bool CBooleanValue::ParseBoolean(const char * const data)
+	bool BooleanValue::ParseBoolean(const char * const data)
 	{
 		if (data == NULL)
 		{
@@ -48,7 +48,7 @@ namespace yeguang
 		return true;
 	}
 
-	void CBooleanValue::PackageBoolean(bool value, char *const data, int &datalen)
+	void BooleanValue::PackageBoolean(bool value, char *const data, int &datalen)
 	{
 		if (datalen < (int)(2 + sizeof(TValueStruct)))
 		{

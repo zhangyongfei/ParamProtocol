@@ -3,11 +3,11 @@
 
 namespace yeguang
 {
-	class CBooleanValue
+	class BooleanValue
 	{
 	public:
-		CBooleanValue();
-		~CBooleanValue();
+		BooleanValue();
+		~BooleanValue();
 
 		static bool ParseBoolean(const char * const data);
 

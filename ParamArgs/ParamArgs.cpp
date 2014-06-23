@@ -48,7 +48,7 @@ namespace yeguang
 
 		while (i < count)
 		{
-			m_argslist.push_back(CValueObject((char *)pvalue, pvalue->totallen));
+			m_argslist.push_back(ValueObject((char *)pvalue, pvalue->totallen));
 			pvalue = (TValueStruct *)(((char *)pvalue) + pvalue->totallen);
 			i++;
 		}
@@ -84,12 +84,12 @@ namespace yeguang
 		return 0;
 	}
 
-	void ParamArgs::AddArg(CValueObject value)
+	void ParamArgs::AddArg(ValueObject value)
 	{
 		m_argslist.push_back(value);
 	}
 
-    void ParamArgs::InsertArg(int index, CValueObject value)
+    void ParamArgs::InsertArg(int index, ValueObject value)
     {
         if (index < 0 || index >= m_argslist.size())
         {
@@ -121,7 +121,7 @@ namespace yeguang
         m_argslist.erase(iter);
     }
 
-	CValueObject& ParamArgs::GetArg(int index)
+	ValueObject& ParamArgs::GetArg(int index)
 	{
 		if (index < 0 || index >= m_argslist.size())
 		{

@@ -4,17 +4,17 @@
 
 namespace yeguang
 {
-	CByteArray::CByteArray()
+	ByteArray::ByteArray()
 	{
 
 	}
 
-	CByteArray::~CByteArray()
+	ByteArray::~ByteArray()
 	{
 
 	}
 
-	TByteArray CByteArray::ParseByteArray(const char * const data)
+	TByteArray ByteArray::ParseByteArray(const char * const data)
 	{
 		if (data == NULL)
 		{
@@ -50,7 +50,7 @@ namespace yeguang
 		return res;
 	}
 
-	void CByteArray::PackageByteArray(TByteArray value, char *const data, int &datalen)
+	void ByteArray::PackageByteArray(TByteArray value, char *const data, int &datalen)
 	{
 		if (datalen < (int)(2 + value.datasize + sizeof(TValueStruct)))
 		{

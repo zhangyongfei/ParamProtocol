@@ -3,11 +3,11 @@
 
 namespace yeguang
 {
-	class CDoubleValue
+	class DoubleValue
 	{
 	public:
-		CDoubleValue();
-		~CDoubleValue();
+		DoubleValue();
+		~DoubleValue();
 
 		static double ParseDouble(const char* const data);
 

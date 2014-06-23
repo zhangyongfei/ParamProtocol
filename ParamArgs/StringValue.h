@@ -4,11 +4,11 @@
 
 namespace yeguang
 {
-	class CStringValue
+	class StringValue
 	{
 	public:
-		CStringValue();
-		~CStringValue();
+		StringValue();
+		~StringValue();
 
 		static std::string ParseString(const char* const data);
 

@@ -3,17 +3,17 @@
 
 namespace yeguang
 {
-	CLongValue::CLongValue()
+	LongValue::LongValue()
 	{
 
 	}
 
-	CLongValue::~CLongValue()
+	LongValue::~LongValue()
 	{
 
 	}
 
-	int64_t CLongValue::ParseLong(const char * const data)
+	int64_t LongValue::ParseLong(const char * const data)
 	{
 		if (data == NULL)
 		{
@@ -50,7 +50,7 @@ namespace yeguang
 	    return tmp;
 	}
 
-	void CLongValue::PackageLong(int64_t value, char *const data, int &datalen)
+	void LongValue::PackageLong(int64_t value, char *const data, int &datalen)
 	{
 		if (datalen < (9 + sizeof(TValueStruct)))
 		{

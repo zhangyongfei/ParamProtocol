@@ -4,15 +4,15 @@
 
 namespace yeguang
 {
-	CDoubleValue::CDoubleValue()
+	DoubleValue::DoubleValue()
 	{
 	}
 
-	CDoubleValue::~CDoubleValue()
+	DoubleValue::~DoubleValue()
 	{
 	}
 
-	double CDoubleValue::ParseDouble(const char* const data)
+	double DoubleValue::ParseDouble(const char* const data)
 	{
 		if (data == NULL)
 		{
@@ -55,7 +55,7 @@ namespace yeguang
 		return tmp;
 	}
 
-	void CDoubleValue::PackageDouble(double value, char *const data, int &datalen)
+	void DoubleValue::PackageDouble(double value, char *const data, int &datalen)
 	{
 		if (datalen < (int)(9 + sizeof(TValueStruct)))
 		{

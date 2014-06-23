@@ -5,7 +5,7 @@
 
 namespace yeguang
 {
-	typedef std::vector<CValueObject> ArgsVector;
+	typedef std::vector<ValueObject> ArgsVector;
 
     class ParamArgs
 	{
@@ -19,15 +19,15 @@ namespace yeguang
 
 		void Reset();
 
-		void AddArg(CValueObject value);
+		void AddArg(ValueObject value);
 
-        void InsertArg(int index, CValueObject value);
+        void InsertArg(int index, ValueObject value);
 
         void RemoveArg(int index);
 
-		CValueObject& GetArg(int index);
+		ValueObject& GetArg(int index);
 
-		CValueObject& operator[](int index)
+		ValueObject& operator[](int index)
 		{
 			return GetArg(index);
 		}

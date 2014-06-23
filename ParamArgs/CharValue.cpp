@@ -5,17 +5,17 @@
 
 namespace yeguang
 {
-	CCharValue::CCharValue()
+	CharValue::CharValue()
 	{
 
 	}
 
-	CCharValue::~CCharValue()
+	CharValue::~CharValue()
 	{
 
 	}
 
-	int8_t CCharValue::ParseChar(const char * const data)
+	int8_t CharValue::ParseChar(const char * const data)
 	{
 		if (data == NULL)
 		{
@@ -41,7 +41,7 @@ namespace yeguang
 		return (int8_t)pvalue->data[1];
 	}
 
-	void CCharValue::PackageChar(char value, char *const data, int &datalen)
+	void CharValue::PackageChar(char value, char *const data, int &datalen)
 	{
 		if (datalen < (2 + sizeof(TValueStruct)))
 		{

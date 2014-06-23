@@ -21,22 +21,22 @@ namespace yeguang
 #define DATATYPE      1
 
 #pragma pack(push, 1)
-    typedef struct tagParamMessage
-    {
-        int hdrflag;
-        int msglen;
-        int eventid;
-        unsigned short checksum;
-        char eventarg[0];
+typedef struct tagParamMessage
+{
+    int hdrflag;
+    int msglen;
+    int eventid;
+    unsigned short checksum;
+    char eventarg[0];
 
-        tagParamMessage()
-        {
-            hdrflag  = HEADRTVALUE;
-            msglen   = 0;
-            eventid  = 0;
-            checksum = 0;
-        }
-    }TParamMessage;
+    tagParamMessage()
+    {
+        hdrflag  = HEADRTVALUE;
+        msglen   = 0;
+        eventid  = 0;
+        checksum = 0;
+    }
+}TParamMessage;
 #pragma pack(pop)
 
 ParamSocket::ParamSocket()
@@ -111,7 +111,7 @@ int ParamSocket::SetCheckCB(CheckConnCB check_callback, void* context)
 
 extern uint32_t APHash(const char *str);
 
-int ParamSocket::SendArgs(std::string funname, ParamArgs &args)
+int ParamSocket::CallFunction(std::string funname, ParamArgs &args)
 {
 	char buffer[PDUSIZE] = {0};
 	int data_len = sizeof(buffer) - sizeof(TParamMessage);
@@ -120,7 +120,7 @@ int ParamSocket::SendArgs(std::string funname, ParamArgs &args)
 
 	args.GetData(phead->eventarg, data_len);
 
-	phead->hdrflag = HEADRTVALUE;
+	phead->hdrflag = HEADRTVALUE | (DATATYPE << 6);
 	phead->msglen  = data_len + sizeof(TParamMessage);
 	phead->eventid = APHash(funname.c_str());
 	phead->checksum = CheckSum(phead->hdrflag, phead->msglen, phead->eventid, 0);
@@ -131,6 +131,26 @@ int ParamSocket::SendArgs(std::string funname, ParamArgs &args)
 	}
 
     return data_len + sizeof(TParamMessage);
+}
+
+int ParamSocket::CheckConn()
+{
+	char buffer[PDUSIZE] = {0};
+	int data_len = sizeof(buffer) - sizeof(TParamMessage);
+
+	TParamMessage *phead = (TParamMessage *)buffer;
+
+	phead->hdrflag = HEADRTVALUE;
+	phead->msglen  = sizeof(TParamMessage);
+	phead->eventid = -1;
+	phead->checksum = CheckSum(phead->hdrflag, phead->msglen, phead->eventid, 0);
+
+	if(send_callback_)
+	{
+		send_callback_(buffer, sizeof(TParamMessage), send_context_);
+	}
+
+    return sizeof(TParamMessage);
 }
 
 int ParamSocket::InputData(const char * const data, int data_len)

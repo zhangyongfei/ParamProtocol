@@ -4,11 +4,11 @@
 
 namespace yeguang
 {
-	class CIntValue
+	class IntValue
 	{
 	public:
-		CIntValue();
-		~CIntValue();
+		IntValue();
+		~IntValue();
 
 		static int32_t ParseInt(const char* const data);
 

@@ -14,15 +14,19 @@ SET(LIB_LIST)
 #usrsctplib
 #pthread)
 
-#AddDefs("-DSCTP_DEBUG -DINET")
+#AddDefsWin32(/wd4200)
 
-AddHDir(${CMAKE_CURRENT_LIST_DIR}/ParamArgs)
+AddHDir("$ENV{JAVA_HOME}/include"
+"$ENV{JAVA_HOME}/include/win32"
+${CMAKE_CURRENT_LIST_DIR}/ParamArgs 
+${CMAKE_CURRENT_LIST_DIR}/Java)
 
 AddSrcDir(SOURCE_LIST 
 ${CMAKE_CURRENT_LIST_DIR}
-${CMAKE_CURRENT_LIST_DIR}/ParamArgs)
+${CMAKE_CURRENT_LIST_DIR}/ParamArgs
+${CMAKE_CURRENT_LIST_DIR}/Java)
 
-StaticLib(ParamProtocol 
+SharedLib(ParamArgs
 SOURCE_LIST
-LIB_LIST)
+"")
 

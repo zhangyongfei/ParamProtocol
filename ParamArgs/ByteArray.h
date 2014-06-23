@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <memory.h>
 #include <string.h>
-#if _MSC_VER <= 1500
+#ifdef WIN32
 #include <memory.h>
 #else
 #include <tr1/memory>
@@ -12,11 +12,11 @@
 
 namespace yeguang
 {
-	class CByteArray
+	class ByteArray
 	{			
 	public:
-		CByteArray();
-		~CByteArray();
+		ByteArray();
+		~ByteArray();
 
 		static TByteArray ParseByteArray(const char * const data);
 

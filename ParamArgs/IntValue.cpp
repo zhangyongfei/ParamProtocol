@@ -3,17 +3,17 @@
 
 namespace yeguang
 {
-	CIntValue::CIntValue()
+	IntValue::IntValue()
 	{
 
 	}
 
-	CIntValue::~CIntValue()
+	IntValue::~IntValue()
 	{
 
 	}
 
-	int32_t CIntValue::ParseInt(const char* const data)
+	int32_t IntValue::ParseInt(const char* const data)
 	{
 		if (data == NULL)
 		{
@@ -46,7 +46,7 @@ namespace yeguang
 		return tmp;
 	}
 
-	void CIntValue::PackageInt(int32_t value, char *const data, int &datalen)
+	void IntValue::PackageInt(int32_t value, char *const data, int &datalen)
 	{
 		if (datalen < (5 + sizeof(TValueStruct)))
 		{
