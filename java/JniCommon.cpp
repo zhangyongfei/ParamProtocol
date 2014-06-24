@@ -93,5 +93,15 @@ void GetJniEnv(void **env)
 		return;
     }
 
-	jvm_->AttachCurrentThread(env, NULL);
+	jint res = jvm_->AttachCurrentThread(env, NULL);
+	printf("AttachCurrentThread:%d\n", res);
+}
+
+void ReleaseJniEnv()
+{
+	if (PthreadSelf() == thrd_id_)
+	{
+		return;
+	}
+	jvm_->DetachCurrentThread();
 }

@@ -54,12 +54,19 @@ int ParamExecutor::AddRecvCB(std::string function_name, Output2InteriorCB recvcb
 
     recvcb_map_.insert(RecvCBMap::value_type(hash_value, TParamInfo(recvcb, context)));
 
-    return 0;
+    return hash_value;
 }
 
-int ParamExecutor::CallFunction(uint32_t function_id, ParamArgs& args)
+const TParamInfo* ParamExecutor::GetParamInfo(int function_id)
 {
-    return 0;
+	RecvCBMap::iterator iter = recvcb_map_.find(function_id);
+
+	if(iter == recvcb_map_.end())
+	{
+		return NULL;
+	}
+
+	return &iter->second;
 }
 
 }

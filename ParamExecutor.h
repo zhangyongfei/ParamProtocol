@@ -32,7 +32,7 @@ public:
 
     int AddRecvCB(std::string function_name, Output2InteriorCB recvcb, void *context);
 
-    virtual int CallFunction(uint32_t function_id, ParamArgs& args);
+    const TParamInfo* GetParamInfo(int function_id);
 private:
     RecvCBMap recvcb_map_;
 };

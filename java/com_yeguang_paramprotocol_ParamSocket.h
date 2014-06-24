@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_yeguang_paramprotocol_ParamSocket
  * Method:    Create
- * Signature: (Lcom/yeguang/paramprotocol/ParamCallback;)V
+ * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_Create
-  (JNIEnv *, jobject, jobject);
+  (JNIEnv *, jobject);
 
 /*
  * Class:     com_yeguang_paramprotocol_ParamSocket
@@ -47,6 +47,13 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_InputData
 JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_CallFunction
   (JNIEnv *, jobject, jstring, jobject);
 
+/*
+ * Class:     com_yeguang_paramprotocol_ParamSocket
+ * Method:    SaveFunction
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_com_yeguang_paramprotocol_ParamSocket_SaveFunction
+  (JNIEnv *, jobject, jstring);
 #ifdef __cplusplus
 }
 #endif

@@ -17,6 +17,7 @@ extern jstring stoJstring(JNIEnv* env, const char* pat);
 extern uint32_t PthreadSelf();
 extern uint32_t PthreadSelf();
 extern void GetJniEnv(void **env);
+extern void ReleaseJniEnv();
 
 extern JavaVM *jvm_;
 extern JNIEnv *env_;
