@@ -1,3 +1,4 @@
+#define DLLEXPORT
 #include "ValueObject.h"
 #include "ValueCommon.h"
 #include "BooleanValue.h"

@@ -5,6 +5,7 @@
 #include <string>
 #include <stdexcept>
 
+
 namespace yeguang
 {
 #pragma pack(push, 1)

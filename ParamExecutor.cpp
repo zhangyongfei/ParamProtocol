@@ -1,3 +1,4 @@
+#define DLLEXPORT
 #include "ParamExecutor.h"
 #include <string.h>
 

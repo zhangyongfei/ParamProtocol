@@ -1,3 +1,4 @@
+#define DLLEXPORT
 #include "paramsocket.h"
 #include <string.h>
 
@@ -121,7 +122,7 @@ int ParamSocket::CallFunction(std::string funname, ParamArgs &args)
 
 	args.GetData(phead->eventarg, data_len);
 
-	printf("data_len:%d\n", data_len + sizeof(TParamMessage));
+	//printf("data_len:%d\n", data_len + sizeof(TParamMessage));
 
 	phead->hdrflag = HEADRTVALUE | (DATATYPE << 24);
 	phead->msglen  = data_len + sizeof(TParamMessage);
@@ -191,7 +192,7 @@ int ParamSocket::ParseData(const char * const data, int data_len)
             return -1;
         }
 
-		printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+		//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
         int msg_len = ReadInt(m_data_buffer, m_read_position + 4, m_buffer_size);
 
@@ -202,14 +203,14 @@ int ParamSocket::ParseData(const char * const data, int data_len)
             continue;
         }
 
-		printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+		//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
         if(msg_len > m_data_len)
         {
             return -1;
         }
 
-		printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+		//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
         if((m_buffer_size - m_read_position) >= msg_len)
         {
@@ -225,19 +226,18 @@ int ParamSocket::ParseData(const char * const data, int data_len)
         }
 
 		TParamMessage *param_msg = (TParamMessage *)m_temp_data;
-		printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+		//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
         if (GETDATATYPE(param_msg->hdrflag) == DATATYPE)
         {
             int eventid = ReadInt(m_temp_data, 8, m_buffer_size);
 
-			printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+			//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
             if(recv_callback_)
             {        
-				printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
-				printf("param_msg->eventarg:%p param_msg->msglen:%d\n", param_msg->eventarg,
-					param_msg->msglen); //
+				//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+				//printf("param_msg->eventarg:%p param_msg->msglen:%d\n", param_msg->eventarg, param_msg->msglen); //
                 recv_callback_(param_msg->eventid, ParamArgs(param_msg->eventarg, 
 					param_msg->msglen - sizeof(TParamMessage)), recv_context_);
             }

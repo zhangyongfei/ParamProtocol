@@ -50,8 +50,6 @@ namespace yeguang
 		ptmp[6] = pvalue->data[7];
 		ptmp[7] = pvalue->data[8];
 
-		printf("%lf\n", tmp);
-
 		return tmp;
 	}
 

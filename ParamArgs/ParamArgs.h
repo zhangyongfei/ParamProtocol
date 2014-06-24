@@ -7,7 +7,7 @@ namespace yeguang
 {
 	typedef std::vector<ValueObject> ArgsVector;
 
-    class ParamArgs
+    class PARAMPROTOCOL_API ParamArgs
 	{
 	public:
         ParamArgs();

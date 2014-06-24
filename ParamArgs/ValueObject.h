@@ -10,6 +10,7 @@
 #include <tr1/memory>
 #endif
 #include<memory>
+#include "ProtocolCommon.h"
 
 namespace yeguang
 {
@@ -51,7 +52,7 @@ namespace yeguang
 		std::string  strvalue;
 	}TValueVar;
 
-	class ValueObject
+	class PARAMPROTOCOL_API ValueObject
 	{
 	public:
 		ValueObject()

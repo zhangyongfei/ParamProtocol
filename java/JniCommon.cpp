@@ -94,7 +94,7 @@ void GetJniEnv(void **env)
     }
 
 	jint res = jvm_->AttachCurrentThread(env, NULL);
-	printf("AttachCurrentThread:%d\n", res);
+	//printf("AttachCurrentThread:%d\n", res);
 }
 
 void ReleaseJniEnv()

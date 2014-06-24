@@ -1,3 +1,4 @@
+#define DLLEXPORT
 #include "ParamArgs.h"
 #include <string.h>
 #include "ValueCommon.h"

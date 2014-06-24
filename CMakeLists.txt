@@ -28,5 +28,16 @@ ${CMAKE_CURRENT_LIST_DIR}/Java)
 
 SharedLib(ParamProtocol
 SOURCE_LIST
-"")
+LIB_LIST)
+
+SET(SOURCE_LIST)
+AddSrc(SOURCE_LIST
+test/c++/test.cpp)
+
+AddLibsWin32(LIB_LIST
+ParamProtocol)
+
+AppPrj(testcpp
+SOURCE_LIST
+LIB_LIST)
 

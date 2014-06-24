@@ -8,7 +8,6 @@
 
 namespace yeguang
 {
-
 typedef struct tagParamInfo
 {
     Output2InteriorCB recv_callback_;
@@ -23,7 +22,7 @@ typedef struct tagParamInfo
 
 typedef stdext::hash_map<uint32_t, TParamInfo> RecvCBMap;
 
-class ParamExecutor
+class PARAMPROTOCOL_API ParamExecutor
 {
     ParamExecutor();
     ~ParamExecutor();

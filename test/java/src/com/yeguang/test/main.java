@@ -38,6 +38,7 @@ public class main implements ParamCallback {
 	    	tmp.AddArgs(new ParamArg(array));
 	    	tmp.AddArgs(new ParamArg("Hello World!"));	    	
 	    	main.this.sock_.CallFunction("Test", tmp);
+	    	main.this.sock_.CheckConn();
 	    }
 	}
 	
@@ -120,6 +121,7 @@ public class main implements ParamCallback {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				testmain.sock_.Destroy();
 				System.exit(0);
 			}
 		}
@@ -135,7 +137,7 @@ public class main implements ParamCallback {
 	@Override
 	public void CheckCallback() {
 		// TODO Auto-generated method stub
-		
+		System.out.print("CheckCallback");
 	}
 	
 

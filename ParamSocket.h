@@ -11,7 +11,7 @@ typedef int (* Output2NetworkCB)(const char * const data, int data_len, void* co
 typedef int (* Output2InteriorCB)(uint32_t function_id, ParamArgs& args, void* context);
 typedef int (* CheckConnCB)(void* context);
 
-class ParamSocket
+class PARAMPROTOCOL_API ParamSocket
 {
     ParamSocket();
 public:
