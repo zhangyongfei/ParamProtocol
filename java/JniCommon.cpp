@@ -93,7 +93,11 @@ void GetJniEnv(void **env)
 		return;
     }
 
+#ifdef ANDROID
+	jint res = jvm_->AttachCurrentThread((JNIEnv**)env, NULL);
+#else
 	jint res = jvm_->AttachCurrentThread(env, NULL);
+#endif	
 	//printf("AttachCurrentThread:%d\n", res);
 }
 

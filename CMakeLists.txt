@@ -6,14 +6,8 @@ include(CMakeUtility)
 Solution(ParamProtocol ON)
 
 #设置依赖库
-#AddLibsWin32(LIB_LIST
-#usrsctplib
-#ws2_32)
-#AddLibsLinux(LIB_LIST
-#usrsctplib
-#pthread)
-
-#AddDefsWin32(/wd4200)
+AddLibsAndroid(LIB_LIST
+stdc++)
 
 AddHDir(
 ${CMAKE_CURRENT_LIST_DIR}/ParamArgs 

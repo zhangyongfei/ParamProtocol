@@ -4,8 +4,11 @@
 #include "ParamSocket.h"
 #include <stdint.h>
 #include <string>
+#ifdef WIN32
 #include <hash_map>
-
+#elif LINUX
+#include <ext/hash_map>
+#endif
 namespace yeguang
 {
 typedef struct tagParamInfo
@@ -20,7 +23,11 @@ typedef struct tagParamInfo
     }
 }TParamInfo;
 
+#ifdef WIN32
 typedef stdext::hash_map<uint32_t, TParamInfo> RecvCBMap;
+#elif LINUX
+typedef __gnu_cxx::hash_map<uint32_t, TParamInfo> RecvCBMap;
+#endif
 
 class PARAMPROTOCOL_API ParamExecutor
 {

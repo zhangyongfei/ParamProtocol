@@ -238,8 +238,9 @@ int ParamSocket::ParseData(const char * const data, int data_len)
             {        
 				//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 				//printf("param_msg->eventarg:%p param_msg->msglen:%d\n", param_msg->eventarg, param_msg->msglen); //
-                recv_callback_(param_msg->eventid, ParamArgs(param_msg->eventarg, 
-					param_msg->msglen - sizeof(TParamMessage)), recv_context_);
+				ParamArgs paramargs(param_msg->eventarg, 
+					param_msg->msglen - sizeof(TParamMessage));
+				recv_callback_(param_msg->eventid, paramargs, recv_context_);
             }
 
         }
