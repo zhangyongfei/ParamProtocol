@@ -6,7 +6,6 @@ include(CMakeUtility)
 Solution(ParamProtocol ON)
 
 #设置依赖库
-SET(LIB_LIST)
 #AddLibsWin32(LIB_LIST
 #usrsctplib
 #ws2_32)
@@ -16,10 +15,17 @@ SET(LIB_LIST)
 
 #AddDefsWin32(/wd4200)
 
-AddHDir("$ENV{JAVA_HOME}/include"
-"$ENV{JAVA_HOME}/include/win32"
+AddHDir(
 ${CMAKE_CURRENT_LIST_DIR}/ParamArgs 
-${CMAKE_CURRENT_LIST_DIR}/Java)
+${CMAKE_CURRENT_LIST_DIR}/Java
+)
+AddHDirWin32(
+"$ENV{JAVA_HOME}/include"
+"$ENV{JAVA_HOME}/include/win32"
+)
+AddHDirAndroid(
+E:/project/Andriod/android-ndk-r8/sources/cxx-stl/gnu-libstdc++/include/backward
+)
 
 AddSrcDir(SOURCE_LIST 
 ${CMAKE_CURRENT_LIST_DIR}
@@ -30,14 +36,12 @@ SharedLib(ParamProtocol
 SOURCE_LIST
 LIB_LIST)
 
-SET(SOURCE_LIST)
-AddSrc(SOURCE_LIST
-test/c++/test.cpp)
+SET(TEST_SOURCE_LIST ${CMAKE_CURRENT_LIST_DIR}/test/c++/test.cpp)
 
-AddLibsWin32(LIB_LIST
+AddLibsWin32(TEST_LIB_LIST
 ParamProtocol)
 
 AppPrj(testcpp
-SOURCE_LIST
-LIB_LIST)
+TEST_SOURCE_LIST
+TEST_LIB_LIST)
 
