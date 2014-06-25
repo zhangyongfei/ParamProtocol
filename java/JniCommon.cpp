@@ -1,12 +1,6 @@
-#include <jni.h>
+#include "JniCommon.h"
 #include <string.h>
 #include <malloc.h>
-#include <stdint.h>
-#ifdef WIN32
-#include <windows.h>
-#else
-#include <pthread.h>
-#endif
 
 JavaVM *jvm_ = NULL;
 JNIEnv *env_ = NULL;

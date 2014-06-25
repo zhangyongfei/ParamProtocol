@@ -12,7 +12,7 @@ static jobject param_socket_ = NULL;
 yeguang::ParamSocket *GetSocket(JNIEnv *env, jobject obj)
 {
 	// call Lcom/yeguang/paramprotocol/ParamSocket; getSock
-	jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamSocket;",
+	jmethodID mid = GetMethod(env, "com/yeguang/paramprotocol/ParamSocket",
 		"getSock", "()J");
 
 	yeguang::ParamSocket *sock = (yeguang::ParamSocket *)env->CallLongMethod(obj, mid);
@@ -22,7 +22,7 @@ yeguang::ParamSocket *GetSocket(JNIEnv *env, jobject obj)
 
 int GetArgsCount(JNIEnv *env, jobject args)
 {
-	jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArgs;",
+	jmethodID mid = GetMethod(env, "com/yeguang/paramprotocol/ParamArgs",
 		"getCount", "()I");
 
 	return env->CallIntMethod(args, mid);
@@ -93,7 +93,7 @@ void AddArg(JNIEnv *env, jobject args, yeguang::ValueObject& valueobj)
 
 	if(argobj != NULL)
 	{
-		jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArgs;",
+		jmethodID mid = GetMethod(env, "com/yeguang/paramprotocol/ParamArgs",
 			"AddArgs", "(Lcom/yeguang/paramprotocol/ParamArg;)V");
 
 		env->CallVoidMethod(args, mid, argobj);
@@ -104,12 +104,12 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 {
 	bool res = false;
 
-	jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArgs;",
+	jmethodID mid = GetMethod(env, "com/yeguang/paramprotocol/ParamArgs",
 		"getArg", "(I)Lcom/yeguang/paramprotocol/ParamArg;");
 
 	jobject arg = env->CallObjectMethod(args, mid, index);
 
-	mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
+	mid = GetMethod(env, "com/yeguang/paramprotocol/ParamArg",
 		"getType", "()I");
 
 	int type = env->CallIntMethod(arg, mid);
@@ -118,7 +118,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 	{
 	case yeguang::BOOLVALUE:
 		{
-			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
+			mid = GetMethod(env, "com/yeguang/paramprotocol/ParamArg",
 				"getBoolean", "()Z");
 
 			jboolean tmpvalue = env->CallBooleanMethod(arg, mid);
@@ -128,7 +128,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 		}break;
 	case yeguang::CHARVALUE:
 		{
-			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
+			mid = GetMethod(env, "com/yeguang/paramprotocol/ParamArg",
 				"getChar", "()C");
 
 			jchar tmpvalue = env->CallCharMethod(arg, mid);
@@ -138,7 +138,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 		}break;
 	case yeguang::SHORTVALUE:
 		{
-			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
+			mid = GetMethod(env, "com/yeguang/paramprotocol/ParamArg",
 				"getShort", "()S");
 
 			jshort tmpvalue = env->CallShortMethod(arg, mid);
@@ -148,7 +148,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 		}break;
 	case yeguang::INTVALUE:
 		{
-			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
+			mid = GetMethod(env, "com/yeguang/paramprotocol/ParamArg",
 				"getInt", "()I");
 
 			jint tmpvalue = env->CallIntMethod(arg, mid);
@@ -158,7 +158,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 		}break;
 	case yeguang::LONGVALUE:
 		{
-			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
+			mid = GetMethod(env, "com/yeguang/paramprotocol/ParamArg",
 				"getLong", "()J");
 
 			jlong tmpvalue = env->CallLongMethod(arg, mid);
@@ -168,7 +168,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 		}break;
 	case yeguang::FLOATVALUE:
 		{
-			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
+			mid = GetMethod(env, "com/yeguang/paramprotocol/ParamArg",
 				"getFloat", "()F");
 
 			jfloat tmpvalue = env->CallFloatMethod(arg, mid);
@@ -178,7 +178,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 		}break;
 	case yeguang::DOUBLEVALUE:
 		{
-			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
+			mid = GetMethod(env, "com/yeguang/paramprotocol/ParamArg",
 				"getDouble", "()D");
 
 			jdouble tmpvalue = env->CallDoubleMethod(arg, mid);
@@ -188,7 +188,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 		}break;
 	case yeguang::STRINGVALUE:
 		{
-			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
+			mid = GetMethod(env, "com/yeguang/paramprotocol/ParamArg",
 				"getString", "()Ljava/lang/String;");
 
 			jstring tmpvalue = (jstring)env->CallObjectMethod(arg, mid);
@@ -201,7 +201,7 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 		}break;
 	case yeguang::BYTEARRAY:
 		{
-			mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamArg;",
+			mid = GetMethod(env, "com/yeguang/paramprotocol/ParamArg",
 				"getByteArray", "()[B");
 
 			jbyteArray tmpvalue = (jbyteArray)env->CallObjectMethod(arg, mid);
@@ -233,7 +233,7 @@ int JniSendCallback(const char * const data, int data_len, void* context)
 
 	//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
-	jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamSocket;",
+	jmethodID mid = GetMethod(env, "com/yeguang/paramprotocol/ParamSocket",
 		"SendCallback", "([B)V");
 
 	//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
@@ -258,13 +258,13 @@ int JniSendCallback(const char * const data, int data_len, void* context)
 
 int JniRecvCallback(uint32_t function_id, yeguang::ParamArgs& args, void* context)
 {
-	//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+	dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 	JNIEnv *env;
 	GetJniEnv((void **)&env);
 
 	const yeguang::TParamInfo *info = yeguang::ParamExecutor::Instance()->GetParamInfo(function_id);
 
-	//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+	dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
 	if(info != NULL)
 	{
@@ -274,7 +274,7 @@ int JniRecvCallback(uint32_t function_id, yeguang::ParamArgs& args, void* contex
 		jmethodID mid_args = env->GetMethodID(clazz_args, "<init>", "()V");
 		jobject argsobj = env->NewObject(clazz_args, mid_args);
 
-		//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+		dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
 		int cnt = args.GetArgCount();
 
@@ -283,21 +283,21 @@ int JniRecvCallback(uint32_t function_id, yeguang::ParamArgs& args, void* contex
 			AddArg(env, argsobj, args[i]);
 		}
 
-		jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamSocket;",
+		jmethodID mid = GetMethod(env, "com/yeguang/paramprotocol/ParamSocket",
 			"Execute", "(ILcom/yeguang/paramprotocol/ParamArgs;)V");   
 
-		//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+		dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
-		//printf("env:%p execobj:%p mid:%p function_id:%X argsobj:%p\n", env, execobj, mid, function_id, argsobj);
+		dprint("env:%p execobj:%p mid:%p function_id:%X argsobj:%p\n", env, execobj, mid, function_id, argsobj);
 
-		//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+		dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
 		env->CallVoidMethod(execobj, mid, function_id, argsobj);
 
-		//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+		dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 	}
 
-	//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+	dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
 	ReleaseJniEnv();
 	return 0;
@@ -310,7 +310,7 @@ int JniCheckCallback(void* context)
 
 	jobject obj = (jobject)context;
 
-	jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamSocket;",
+	jmethodID mid = GetMethod(env, "com/yeguang/paramprotocol/ParamSocket",
 		"CheckCallback", "()V");
 
 	env->CallLongMethod(obj, mid);
@@ -359,7 +359,7 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_Create
 	sock->SetRecvCB(JniRecvCallback, param_socket_);
 
 	// call Lcom/yeguang/paramprotocol/ParamSocket; setSock
-	jmethodID mid = GetMethod(env, "Lcom/yeguang/paramprotocol/ParamSocket;",
+	jmethodID mid = GetMethod(env, "com/yeguang/paramprotocol/ParamSocket",
 		"setSock", "(J)V");
 
 	if(mid == NULL)
@@ -420,26 +420,25 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_CheckConn
 /*
  * Class:     com_yeguang_paramprotocol_ParamSocket
  * Method:    InputData
- * Signature: ([B)V
+ * Signature: ([BI)V
  */
 JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_InputData
-  (JNIEnv *env, jobject obj, jbyteArray dataarry)
+    (JNIEnv *env, jclass cls, jbyteArray dataarry, jint len)
 {
-	//printf("-%s---%p\n", __FUNCTION__, obj);
+	dprint("-datalen:%d, %d---\n", len, env->GetArrayLength(dataarry));
 	if (param_socket_ == NULL)
 	{
 		return;
 	}
 
-	yeguang::ParamSocket *sock = GetSocket(env, obj);
+	yeguang::ParamSocket *sock = GetSocket(env, param_socket_);
 
 	if (sock == NULL)
 	{
 		return;
 	}
 
-	jbyte *data = (jbyte*)env->GetByteArrayElements(dataarry, 0);
-	jsize len = env->GetArrayLength(dataarry);
+	jbyte *data = (jbyte*)env->GetByteArrayElements(dataarry, NULL);
 	sock->InputData((char *)data, len);
 	env->ReleaseByteArrayElements(dataarry, data, 0);
 }

@@ -1,6 +1,7 @@
 #ifndef _JNICOMMON_
 #define _JNICOMMON_
 #include <jni.h>
+#include "ProtocolCommon.h"
 
 extern jmethodID GetMethod(JNIEnv *env, 
 					const char* clsname,
@@ -14,7 +15,6 @@ extern jmethodID GetMethod2(JNIEnv *env,
 
 extern char* jstringTostring(JNIEnv* env, jstring jstr);
 extern jstring stoJstring(JNIEnv* env, const char* pat);
-extern uint32_t PthreadSelf();
 extern uint32_t PthreadSelf();
 extern void GetJniEnv(void **env);
 extern void ReleaseJniEnv();

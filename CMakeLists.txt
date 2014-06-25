@@ -7,7 +7,8 @@ Solution(ParamProtocol ON)
 
 #设置依赖库
 AddLibsAndroid(LIB_LIST
-stdc++)
+stdc++
+log)
 
 AddHDir(
 ${CMAKE_CURRENT_LIST_DIR}/ParamArgs 

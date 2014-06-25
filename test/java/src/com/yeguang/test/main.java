@@ -5,12 +5,10 @@ import com.yeguang.paramprotocol.*;
 public class main implements ParamCallback {
 
 	static {
-		
-		try {
+		try {			
 			System.loadLibrary("ParamProtocol");
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
+		} catch (UnsatisfiedLinkError ule) {
+			System.err.println("WARNING: Could not load library!");
 		}
 	}
 	
@@ -131,7 +129,7 @@ public class main implements ParamCallback {
 	@Override
 	public void SendCallback(byte[] data) {
 		// TODO Auto-generated method stub
-		sock_.InputData(data);
+		sock_.InputData(data, data.length);
 	}
 
 	@Override
