@@ -15,7 +15,7 @@ public class ParamSocket {
 	public native void Create();
 	public native void Destroy();
 	public native void CheckConn();
-	public static native void InputData(byte[] data, int datalen);
+	public native void InputData(byte[] data);
 	public native void CallFunction(String funname, ParamArgs args);
 	private native int SaveFunction(String name);
 	

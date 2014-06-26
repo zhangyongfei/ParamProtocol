@@ -7,8 +7,6 @@
 #include "ParamExecutor.h"
 
 //////////////////////////////////////////////////////////////////////////
-static jobject param_socket_ = NULL;
-
 yeguang::ParamSocket *GetSocket(JNIEnv *env, jobject obj)
 {
 	// call Lcom/yeguang/paramprotocol/ParamSocket; getSock
@@ -30,7 +28,7 @@ int GetArgsCount(JNIEnv *env, jobject args)
 
 void AddArg(JNIEnv *env, jobject args, yeguang::ValueObject& valueobj)
 {
-	jclass clazz_arg = env->FindClass("Lcom/yeguang/paramprotocol/ParamArg;");
+	jclass clazz_arg = env->FindClass("com/yeguang/paramprotocol/ParamArg");
 	jmethodID mid_arg = NULL;
 	jobject argobj = NULL;
 
@@ -222,59 +220,43 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 
 int JniSendCallback(const char * const data, int data_len, void* context)
 {
-	//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
-
 	JNIEnv *env = NULL;
-	GetJniEnv((void **)&env);
-
-	//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+	bool res = GetJniEnv((void **)&env);
 
 	jobject obj = (jobject)context;
-
-	//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
 	jmethodID mid = GetMethod(env, "com/yeguang/paramprotocol/ParamSocket",
 		"SendCallback", "([B)V");
 
-	//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
-
 	jbyteArray byte_array = env->NewByteArray(data_len);
-
-	//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
 	env->SetByteArrayRegion(byte_array, 0, data_len, (jbyte *)data);
 
-	//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
-
-	//printf("env:%p, obj:%p, mid:%p\n", env, obj, mid);
+	dprint("env:%p, obj:%p, mid:%p", env, obj, mid);
 
 	env->CallVoidMethod(obj, mid, byte_array);
-
-	//printf("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 	
-	ReleaseJniEnv();
+	if (res)
+	{
+		ReleaseJniEnv();
+	}
 	return 0;
 }
 
 int JniRecvCallback(uint32_t function_id, yeguang::ParamArgs& args, void* context)
 {
-	dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 	JNIEnv *env;
-	GetJniEnv((void **)&env);
+	bool res = GetJniEnv((void **)&env);
 
 	const yeguang::TParamInfo *info = yeguang::ParamExecutor::Instance()->GetParamInfo(function_id);
-
-	dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
 	if(info != NULL)
 	{
 		jobject execobj = (jobject)context;
 
-		jclass clazz_args = env->FindClass("Lcom/yeguang/paramprotocol/ParamArgs;");
+		jclass clazz_args = env->FindClass("com/yeguang/paramprotocol/ParamArgs");
 		jmethodID mid_args = env->GetMethodID(clazz_args, "<init>", "()V");
 		jobject argsobj = env->NewObject(clazz_args, mid_args);
-
-		dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
 		int cnt = args.GetArgCount();
 
@@ -286,36 +268,39 @@ int JniRecvCallback(uint32_t function_id, yeguang::ParamArgs& args, void* contex
 		jmethodID mid = GetMethod(env, "com/yeguang/paramprotocol/ParamSocket",
 			"Execute", "(ILcom/yeguang/paramprotocol/ParamArgs;)V");   
 
-		dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
-
-		dprint("env:%p execobj:%p mid:%p function_id:%X argsobj:%p\n", env, execobj, mid, function_id, argsobj);
-
-		dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
+		dprint("env:%p execobj:%p mid:%p function_id:%X argsobj:%p", env, execobj, mid, function_id, argsobj);
 
 		env->CallVoidMethod(execobj, mid, function_id, argsobj);
-
-		dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 	}
 
-	dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
-
-	ReleaseJniEnv();
+	if (res)
+	{
+		ReleaseJniEnv();
+	}
 	return 0;
 }
 
 int JniCheckCallback(void* context)
 {
 	JNIEnv *env = NULL;
-	GetJniEnv((void **)&env);
+	bool res = GetJniEnv((void **)&env);
 
 	jobject obj = (jobject)context;
+
+	dprint("env:%p", env_);
 
 	jmethodID mid = GetMethod(env, "com/yeguang/paramprotocol/ParamSocket",
 		"CheckCallback", "()V");
 
+	dprint("env:%p", env_);
+
 	env->CallLongMethod(obj, mid);
 
-	ReleaseJniEnv();
+	if (res)
+	{
+		ReleaseJniEnv();
+	}
+
 	return 0;
 }
 
@@ -332,7 +317,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void *reserved) //这是JNI_OnLoad的
 	if(vm->GetEnv((void**)&env_, JNI_VERSION_1_4) != JNI_OK) //从JavaVM获取JNIEnv，一般使用1.4的版本
 	    return -1;	
 
-	//printf("env:%p\n", env_);
+	dprint("env:%p", env_);
 
 	return JNI_VERSION_1_4; //这里很重要，必须返回版本，否则加载会失败。
 }
@@ -345,14 +330,9 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void *reserved) //这是JNI_OnLoad的
 JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_Create
   (JNIEnv *env, jobject obj)
 {
-	if(param_socket_)
-	{
-		return;
-	}
-
 	yeguang::ParamSocket *sock = yeguang::ParamSocket::Create();
 
-	param_socket_ = env->NewGlobalRef(obj);  
+	jobject param_socket_ = env->NewGlobalRef(obj);  
 
 	sock->SetSendCB(JniSendCallback, param_socket_);
 	sock->SetCheckCB(JniCheckCallback, param_socket_);
@@ -378,11 +358,6 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_Create
 JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_Destroy
 	(JNIEnv *env, jobject obj)
 {
-	if (param_socket_ == NULL)
-	{
-		return;
-	}
-
 	yeguang::ParamSocket *sock = GetSocket(env, obj);
 
 	if (sock != NULL)
@@ -390,6 +365,16 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_Destroy
 		delete sock;
 		sock = NULL;
 	}
+
+	jmethodID mid = GetMethod(env, "com/yeguang/paramprotocol/ParamSocket",
+		"setSock", "(J)V");
+
+	if(mid == NULL)
+	{
+		return;
+	}
+
+	env->CallVoidMethod(obj, mid, (jlong)0);
 }
 
 
@@ -401,10 +386,7 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_Destroy
 JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_CheckConn
   (JNIEnv *env, jobject obj)
 {
-	if (param_socket_ == NULL)
-	{
-		return;
-	}
+	dprint("env:%p", env_);
 
 	yeguang::ParamSocket *sock = GetSocket(env, obj);
 
@@ -412,6 +394,8 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_CheckConn
 	{
 		return;
 	}
+
+	dprint("env:%p", env_);
 
 	sock->CheckConn();
 }
@@ -423,15 +407,12 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_CheckConn
  * Signature: ([BI)V
  */
 JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_InputData
-    (JNIEnv *env, jclass cls, jbyteArray dataarry, jint len)
+    (JNIEnv *env, jobject obj, jbyteArray dataarry)
 {
+	int len = env->GetArrayLength(dataarry);
 	dprint("-datalen:%d, %d---\n", len, env->GetArrayLength(dataarry));
-	if (param_socket_ == NULL)
-	{
-		return;
-	}
 
-	yeguang::ParamSocket *sock = GetSocket(env, param_socket_);
+	yeguang::ParamSocket *sock = GetSocket(env, obj);
 
 	if (sock == NULL)
 	{
@@ -451,31 +432,16 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_InputData
 JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_CallFunction
   (JNIEnv *env, jobject obj, jstring funname, jobject args)
 {
-	if (param_socket_ == NULL)
-	{
-		return;
-	}
-
-	//printf("-%s---%p\n", __FUNCTION__, obj);
-
-	//printf("%s %d\n", __FILE__, __LINE__);
-
 	yeguang::ParamSocket *sock = GetSocket(env, obj);
-
-	//printf("%s %d\n", __FILE__, __LINE__);
 
 	if (sock == NULL)
 	{
 		return;
 	}
 
-	//printf("%s %d\n", __FILE__, __LINE__);
-
 	char *name = jstringTostring(env, funname);
 	std::string strname = name;
 	free(name);
-
-	//printf("%s %d\n", __FILE__, __LINE__);
 
 	int count = GetArgsCount(env, args);
 
@@ -491,7 +457,6 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_CallFunction
 		}
 	}
 
-	//printf("%s %d\n", __FILE__, __LINE__);
 	sock->CallFunction(strname, params);
 }
 
@@ -503,18 +468,16 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_CallFunction
 JNIEXPORT jint JNICALL Java_com_yeguang_paramprotocol_ParamSocket_SaveFunction
   (JNIEnv *env, jobject obj, jstring funname)
 {
-	if (param_socket_ == NULL)
-	{
-		return -1;
-	}
-
-	//printf("-%s---%p\n", __FUNCTION__, obj);
+	dprint("env:%p\n", env_);
 
 	char *name = jstringTostring(env, funname);
-	int res = yeguang::ParamExecutor::Instance()->AddRecvCB(name, JniRecvCallback, param_socket_);
+
+	dprint("funname:%s\n", name);
+
+	int res = yeguang::ParamExecutor::Instance()->AddRecvCB(name, JniRecvCallback, NULL);
 	free(name);
 
-	//printf("----%p, function:%X\n", obj, res);
+	dprint("res:%X\n", res);
 
 	return res;
 }

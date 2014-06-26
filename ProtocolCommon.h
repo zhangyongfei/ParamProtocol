@@ -23,9 +23,10 @@
 
 #ifdef DEBUG
 #ifdef ANDROID
-#define dprint(format, ...) __android_log_print(ANDROID_LOG_ERROR, "TestJni", format, #__VA_ARGS__)
+#define dprint(format, ...) __android_log_print(ANDROID_LOG_ERROR, "TestJni", \
+	               "[%s(%d)]\t"format, __FILE__, __LINE__, ##__VA_ARGS__)
 #else
-#define dprint(format, ...) //printf(format, #__VA_ARGS__)
+#define dprint(format, ...)  printf("[%s(%d)]\t"format, __FILE__, __LINE__, ##__VA_ARGS__);
 #endif
 #else
 #define dprint(...)

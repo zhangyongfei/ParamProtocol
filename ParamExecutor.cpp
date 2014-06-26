@@ -19,6 +19,8 @@ ParamExecutor* ParamExecutor::Instance()
 {
     static ParamExecutor exec;
 
+	dprint("Instance\n");
+
     return &exec;
 }
 
@@ -44,7 +46,11 @@ uint32_t APHash(const char *str)
 
 int ParamExecutor::AddRecvCB(std::string function_name, Output2InteriorCB recvcb, void *context)
 {
+	dprint("AddRecvCB\n");
+
     uint32_t hash_value = APHash(function_name.c_str());
+
+	dprint("hash_value:%X\n", hash_value);
 
     RecvCBMap::iterator iter = recvcb_map_.find(hash_value);
 

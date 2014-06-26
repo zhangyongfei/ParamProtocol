@@ -21,10 +21,28 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int down=0x7f020000;
+        public static final int downbtn=0x7f020001;
+        public static final int downclick=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
+        public static final int joystick=0x7f020004;
+        public static final int left=0x7f020005;
+        public static final int leftbtn=0x7f020006;
+        public static final int leftclick=0x7f020007;
+        public static final int right=0x7f020008;
+        public static final int rightbtn=0x7f020009;
+        public static final int rightclick=0x7f02000a;
+        public static final int up=0x7f02000b;
+        public static final int upbtn=0x7f02000c;
+        public static final int upclick=0x7f02000d;
     }
     public static final class id {
-        public static final int action_settings=0x7f080000;
+        public static final int action_settings=0x7f080005;
+        public static final int downjoybtn=0x7f080002;
+        public static final int imagebkg=0x7f080000;
+        public static final int leftjoybtn=0x7f080003;
+        public static final int rightjoybtn=0x7f080004;
+        public static final int upjoybtn=0x7f080001;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

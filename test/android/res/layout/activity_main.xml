@@ -8,9 +8,46 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <TextView
+    <ImageView
+        android:id="@+id/imagebkg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/joystick" 
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/upjoybtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imagebkg"
+        android:layout_alignTop="@+id/imagebkg"
+        android:background="@drawable/upbtn" />
+    
+    <Button
+        android:id="@+id/downjoybtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imagebkg"
+        android:layout_alignTop="@+id/imagebkg"
+        android:background="@drawable/downbtn" />
+    
+   <Button
+        android:id="@+id/leftjoybtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imagebkg"
+        android:layout_alignTop="@+id/imagebkg"
+        android:background="@drawable/leftbtn" />
+   
+    <Button
+        android:id="@+id/rightjoybtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imagebkg"
+        android:layout_alignTop="@+id/imagebkg"
+        android:background="@drawable/rightbtn" />
 
 </RelativeLayout>

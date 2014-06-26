@@ -129,7 +129,7 @@ public class main implements ParamCallback {
 	@Override
 	public void SendCallback(byte[] data) {
 		// TODO Auto-generated method stub
-		sock_.InputData(data, data.length);
+		sock_.InputData(data);
 	}
 
 	@Override

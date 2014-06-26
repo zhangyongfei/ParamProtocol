@@ -19,7 +19,8 @@ AddHDirWin32(
 "$ENV{JAVA_HOME}/include/win32"
 )
 AddHDirAndroid(
-E:/project/Andriod/android-ndk-r8/sources/cxx-stl/gnu-libstdc++/include/backward
+$ENV{ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/include/backward
+$ENV{ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/4.8/include/backward
 )
 
 AddSrcDir(SOURCE_LIST 

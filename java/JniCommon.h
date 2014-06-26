@@ -16,7 +16,7 @@ extern jmethodID GetMethod2(JNIEnv *env,
 extern char* jstringTostring(JNIEnv* env, jstring jstr);
 extern jstring stoJstring(JNIEnv* env, const char* pat);
 extern uint32_t PthreadSelf();
-extern void GetJniEnv(void **env);
+extern bool GetJniEnv(void **env);
 extern void ReleaseJniEnv();
 
 extern JavaVM *jvm_;

@@ -62,7 +62,7 @@ char* jstringTostring(JNIEnv* env, jstring jstr)
 //char* to jstring
 jstring stoJstring(JNIEnv* env, const char* pat)
 {
-	jclass strClass = env->FindClass("Ljava/lang/String;");
+	jclass strClass = env->FindClass("java/lang/String");
 	jmethodID ctorID = env->GetMethodID(strClass, "<init>", "([BLjava/lang/String;)V");
 	jbyteArray bytes = env->NewByteArray(strlen(pat));
 	env->SetByteArrayRegion(bytes, 0, strlen(pat), (jbyte*)pat);
@@ -79,27 +79,22 @@ uint32_t PthreadSelf()
 #endif
 }
 
-void GetJniEnv(void **env)
+bool GetJniEnv(void **env)
 {
-    if (PthreadSelf() == thrd_id_)
-    {
-		*env = env_;
-		return;
-    }
-
+	int status = 0;
+	status = jvm_->GetEnv(env,JNI_VERSION_1_4);
+	if(status < 0){
 #ifdef ANDROID
-	jint res = jvm_->AttachCurrentThread((JNIEnv**)env, NULL);
+		jint res = jvm_->AttachCurrentThread((JNIEnv**)env, NULL);
 #else
-	jint res = jvm_->AttachCurrentThread(env, NULL);
+		jint res = jvm_->AttachCurrentThread(env, NULL);
 #endif	
-	//printf("AttachCurrentThread:%d\n", res);
+		return true;
+	}
+	return false;
 }
 
 void ReleaseJniEnv()
 {
-	if (PthreadSelf() == thrd_id_)
-	{
-		return;
-	}
 	jvm_->DetachCurrentThread();
 }

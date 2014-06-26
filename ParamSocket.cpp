@@ -123,7 +123,7 @@ int ParamSocket::CallFunction(std::string funname, ParamArgs &args)
 
 	args.GetData(phead->eventarg, data_len);
 
-	//printf("data_len:%d\n", data_len + sizeof(TParamMessage));
+	dprint("data_len:%d\n", data_len + sizeof(TParamMessage));
 
 	phead->hdrflag = HEADRTVALUE | (DATATYPE << 24);
 	phead->msglen  = data_len + sizeof(TParamMessage);
@@ -194,8 +194,6 @@ int ParamSocket::ParseData(const char * const data, int data_len)
             return -1;
         }
 
-		dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
-
         int msg_len = ReadInt(m_data_buffer, m_read_position + 4, m_buffer_size);
 
         if(msg_len > m_pdu_size)
@@ -205,14 +203,10 @@ int ParamSocket::ParseData(const char * const data, int data_len)
             continue;
         }
 
-		dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
-
         if(msg_len > m_data_len)
         {
             return -1;
         }
-
-		dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
 
         if((m_buffer_size - m_read_position) >= msg_len)
         {
@@ -228,18 +222,14 @@ int ParamSocket::ParseData(const char * const data, int data_len)
         }
 
 		TParamMessage *param_msg = (TParamMessage *)m_temp_data;
-		dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
-
+		
         if (GETDATATYPE(param_msg->hdrflag) == DATATYPE)
         {
             int eventid = ReadInt(m_temp_data, 8, m_buffer_size);
 
-			dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
-
             if(recv_callback_)
             {        
-				dprint("%s:%s, %d\n", __FUNCTION__, __FILE__, __LINE__);
-				dprint("param_msg->eventarg:%p param_msg->msglen:%d\n", param_msg->eventarg, param_msg->msglen); //
+				dprint("param_msg->eventarg:%p param_msg->msglen:%d", param_msg->eventarg, param_msg->msglen); //
 				ParamArgs paramargs(param_msg->eventarg, 
 					param_msg->msglen - sizeof(TParamMessage));
 				recv_callback_(param_msg->eventid, paramargs, recv_context_);

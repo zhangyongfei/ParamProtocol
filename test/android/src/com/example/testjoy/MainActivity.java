@@ -22,31 +22,23 @@ public class MainActivity extends Activity implements ParamCallback {
 		}
 	}
 	
-	/**
-	 * 使用继承java.lang.Thread类的方式创建一个线程
-	 * 
-	 * @author DreamSea 2011-12-29 20:17:06
-	 */
 	public class ThreadTest extends Thread {
 
-	    /**
-	     * 重写（Override）run()方法 JVM会自动调用该方法
-	     */
 	    public void run() {
 	    	ParamArgs tmp = new ParamArgs();
-	    	//tmp.AddArgs(new ParamArg(false));
-	    	//tmp.AddArgs(new ParamArg((char)1));
-	    	//tmp.AddArgs(new ParamArg((short)2));
-	    	//tmp.AddArgs(new ParamArg((int)3));
-	    	//tmp.AddArgs(new ParamArg((long)4));
-	    	//tmp.AddArgs(new ParamArg((float)5));
-	    	//tmp.AddArgs(new ParamArg((double)6));
-	    	//byte[] array = new byte[1];
-	    	//array[0] = 7;
-	    	//tmp.AddArgs(new ParamArg(array));
-	    	//tmp.AddArgs(new ParamArg("Hello World!"));	    	
+	    	tmp.AddArgs(new ParamArg(false));
+	    	tmp.AddArgs(new ParamArg((char)1));
+	    	tmp.AddArgs(new ParamArg((short)2));
+	    	tmp.AddArgs(new ParamArg((int)3));
+	    	tmp.AddArgs(new ParamArg((long)4));
+	    	tmp.AddArgs(new ParamArg((float)5));
+	    	tmp.AddArgs(new ParamArg((double)6));
+	    	byte[] array = new byte[1];
+	    	array[0] = 7;
+	    	tmp.AddArgs(new ParamArg(array));
+	    	tmp.AddArgs(new ParamArg("Hello World!"));	    	
 	    	MainActivity.this.sock_.CallFunction("Test", tmp);
-	    	//MainActivity.this.sock_.CheckConn();
+	    	MainActivity.this.sock_.CheckConn();
 	    }
 	}
 	
@@ -60,6 +52,7 @@ public class MainActivity extends Activity implements ParamCallback {
 		
 		sock_.Create();
 		
+		//*
 		sock_.AddFunction("Test", new ExecuteInterface(){
 
 			@Override
@@ -116,8 +109,8 @@ public class MainActivity extends Activity implements ParamCallback {
 			
 		});
 		
-		ParamArgs tmp = new ParamArgs();
-		sock_.CallFunction("Test", tmp);
+		testthr.start();
+		//*/
 	}
 
 	@Override
@@ -130,9 +123,7 @@ public class MainActivity extends Activity implements ParamCallback {
 	@Override
 	public void SendCallback(byte[] data) {
 		// TODO Auto-generated method stub
-		byte[] tmp = new byte[data.length];	
-		tmp[0] = 1;
-		sock_.InputData(tmp, 1);		
+		sock_.InputData(data);		
 	}
 
 	@Override

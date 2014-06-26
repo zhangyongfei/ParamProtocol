@@ -37,7 +37,7 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_CheckConn
  * Signature: ([BI)V
  */
 JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_InputData
-  (JNIEnv *, jclass, jbyteArray, jint);
+  (JNIEnv *, jobject, jbyteArray);
 
 /*
  * Class:     com_yeguang_paramprotocol_ParamSocket
