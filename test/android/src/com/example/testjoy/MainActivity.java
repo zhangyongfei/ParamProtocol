@@ -1,7 +1,11 @@
 package com.example.testjoy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -51,237 +57,356 @@ public class MainActivity extends Activity implements ParamCallback {
 
 	private ParamSocket sock_ = new ParamSocket(this);
 	ThreadTest testthr = new ThreadTest();
+	
+	boolean bpoint2_ = false;
+	
+	OnTouchListener listener_ = new OnTouchListener() {
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			//joytip_.setText("");
+			//funtip_.setText("");
+			//othertip_.setText("");
+			int action = event.getAction();
+			int pointerCount = event.getPointerCount();
 
-	ImageButton rimgbt_;
-	Bitmap rbitmap_;
+			switch(action){
+			case MotionEvent.ACTION_POINTER_1_DOWN:
+			case MotionEvent.ACTION_DOWN:
+				Log.e("onTouch", "ACTION_DOWN(" + event.getX(0) + ", " + event.getY(0) + ")");
+				for(BtnInfo info : MainActivity.this.btns){
+					try {
+						if(info.OnPress1(v, (int)event.getX(), (int)event.getY(), true)){
+							break;
+						}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						for(BtnInfo info2 : MainActivity.this.btns){
+							//info.GetLocation();
+							info2.OnPress2(new Point(v.getLeft(), v.getTop()), 
+									new Point((int)event.getX(), (int)event.getY()), true);
+						}
+						break;
+					}
+				}
+			    break;
+			case MotionEvent.ACTION_POINTER_1_UP:
+			case MotionEvent.ACTION_UP:
+				Log.e("onTouch", "ACTION_UP(" + event.getX(0) + ", " + event.getY(0) + ")");
+				for(BtnInfo info : MainActivity.this.btns){
+					try {
+						if(info.OnPress1(v, (int)event.getX(), (int)event.getY(), false)){
+							break;
+						}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						for(BtnInfo info2 : MainActivity.this.btns){
+							//info.GetLocation();
+							info2.OnPress2(new Point(v.getLeft(), v.getTop()), 
+									new Point((int)event.getX(), (int)event.getY())
+							, false);
+						}
+						break;
+					}
+				}
+			    break;
+			case MotionEvent.ACTION_MOVE:
+				//Log.e("onTouch", "ACTION_MOVE");
+				/*for(BtnInfo info : MainActivity.this.btns){
+					try {
+						if(info.OnClick1(v, (int)event.getX(), (int)event.getY())){
+							break;
+						}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						for(BtnInfo info2 : MainActivity.this.btns){
+							//info.GetLocation();
+							info2.OnClick2(new Point(v.getLeft(), v.getTop()), 
+									new Point((int)event.getX(), (int)event.getY()));
+						}
+						break;
+					}
+				}
+				
+				if(pointerCount == 2){
+					for(BtnInfo info : MainActivity.this.btns){
+						//info.GetLocation();
+						info.OnClick2(new Point(v.getLeft(), v.getTop()), 
+								new Point((int)event.getX(1), (int)event.getY(1)));
+					}
+				}*/
+			    break;
+			case MotionEvent.ACTION_POINTER_2_DOWN:
+				Log.e("onTouch", "ACTION_POINTER_2_DOWN(" + event.getX(1) + ", " + event.getY(1) + ")");
+				for(BtnInfo info : MainActivity.this.btns){
+					//info.GetLocation();
+					info.OnPress2(new Point(v.getLeft(), v.getTop()), 
+							new Point((int)event.getX(1), (int)event.getY(1)), true);
+				}					
+				break;	
+			case MotionEvent.ACTION_POINTER_2_UP:
+				Log.e("onTouch", "ACTION_POINTER_2_UP(" + event.getX(1) + ", " + event.getY(1) + ")");
+				for(BtnInfo info : MainActivity.this.btns){
+					//info.GetLocation();
+					info.OnPress2(new Point(v.getLeft(), v.getTop()), 
+							new Point((int)event.getX(1), (int)event.getY(1)), false);
+				}					
+				break;
+			default:
+				Log.e("onTouch", "other:" + action);
+				break;
+			}	
+			
+			return false;
+		}
+	};
 
-	ImageButton limgbt_;
-	Bitmap lbitmap_;
-
-	ImageButton uimgbt_;
-	Bitmap ubitmap_;
-
-	ImageButton dimgbt_;
-	Bitmap dbitmap_;
+    List<BtnInfo> btns = new ArrayList<BtnInfo>();
 
 	TextView joytip_;
 
 	void InitJoybtn() {
 		joytip_ = (TextView) findViewById(R.id.joytip);
 
-		rimgbt_ = (ImageButton) findViewById(R.id.rightjoybtn);
-		rbitmap_ = ((BitmapDrawable) (rimgbt_.getBackground())).getBitmap();// 得到ImageButton的图片
+		BtnInfo rtmpbtn = new BtnInfo("rightjoybtn", this, R.id.rightjoybtn, true, listener_);
+		
+		btns.add(rtmpbtn);
+		
+		rtmpbtn.SetClickEvent(new BtnClick(){
 
-		rimgbt_.setOnTouchListener(new OnTouchListener() {
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public void OnClick(boolean bpress) {
 				// TODO Auto-generated method stub
-
-				try {
-					if (rbitmap_.getPixel((int) (event.getX()),
-							((int) event.getY())) == 0) {// 判断点击处像素的颜色是否为0，0表示没
-						// //内容
-						limgbt_.dispatchTouchEvent(event);
-					} else {
-//						Log.e("MainActivity",
-//								"点击区有图像1    "
-//										+ rbitmap_.getPixel(
-//												(int) (event.getX()),
-//												((int) event.getY())));
-
-						joytip_.setText("右");
-					}
-				} catch (Exception e) {
-					return false;
+				String tip = "";
+				if(bpress)
+				{
+					tip = " DOWN";
 				}
-
-				return false;
+				else
+				{
+					tip = " UP";
+				}
+				Log.w("Keyword", "右" + tip);
 			}
+			
 		});
+	
+		BtnInfo tmpbtn = new BtnInfo("leftjoybtn", this, R.id.leftjoybtn, true, listener_);
+		
+		tmpbtn.SetClickEvent(new BtnClick(){
 
-		limgbt_ = (ImageButton) findViewById(R.id.leftjoybtn);
-
-		lbitmap_ = ((BitmapDrawable) (limgbt_.getBackground())).getBitmap();// 得到ImageButton的图片
-
-		limgbt_.setOnTouchListener(new OnTouchListener() {
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public void OnClick(boolean bpress) {
 				// TODO Auto-generated method stub
-				if (lbitmap_.getPixel((int) (event.getX()),
-						((int) event.getY())) == 0) {// 判断点击处像素的颜色是否为0，0表示没
-					// //内容
-					uimgbt_.dispatchTouchEvent(event);
-				} else {
-					//Log.e("MainActivity",
-					//		"点击区有图像2    "
-					//				+ rbitmap_.getPixel((int) (event.getX()),
-					//						((int) event.getY())));
-
-					joytip_.setText("左");
+				String tip = "";
+				if(bpress)
+				{
+					tip = " DOWN";
 				}
-				return false;
+				else
+				{
+					tip = " UP";
+				}
+				Log.w("Keyword", "左" + tip);
 			}
+			
 		});
+		
+		rtmpbtn.AddBrother(tmpbtn);
+		
+        tmpbtn = new BtnInfo("upjoybtn", this, R.id.upjoybtn, true, listener_);
+		
+		
+		tmpbtn.SetClickEvent(new BtnClick(){
 
-		uimgbt_ = (ImageButton) findViewById(R.id.upjoybtn);
-
-		ubitmap_ = ((BitmapDrawable) (uimgbt_.getBackground())).getBitmap();// 得到ImageButton的图片
-
-		uimgbt_.setOnTouchListener(new OnTouchListener() {
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public void OnClick(boolean bpress) {
 				// TODO Auto-generated method stub
-				if (ubitmap_.getPixel((int) (event.getX()),
-						((int) event.getY())) == 0) {// 判断点击处像素的颜色是否为0，0表示没
-					// //内容
-					dimgbt_.dispatchTouchEvent(event);
-				} else {
-//					Log.e("MainActivity",
-//							"点击区有图像3    "
-//									+ rbitmap_.getPixel((int) (event.getX()),
-//											((int) event.getY())));
-
-					joytip_.setText("上");
+				String tip = "";
+				if(bpress)
+				{
+					tip = " DOWN";
 				}
-				return false;
+				else
+				{
+					tip = " UP";
+				}
+				Log.w("Keyword", "上" + tip);
 			}
+			
 		});
+		
+		rtmpbtn.AddBrother(tmpbtn);
+		
+        tmpbtn = new BtnInfo("downjoybtn", this, R.id.downjoybtn, true, listener_);
+		
+		
+		tmpbtn.SetClickEvent(new BtnClick(){
 
-		dimgbt_ = (ImageButton) findViewById(R.id.downjoybtn);
-
-		dbitmap_ = ((BitmapDrawable) (dimgbt_.getBackground())).getBitmap();// 得到ImageButton的图片
-
-		dimgbt_.setOnTouchListener(new OnTouchListener() {
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public void OnClick(boolean bpress) {
 				// TODO Auto-generated method stub
-				if (dbitmap_.getPixel((int) (event.getX()),
-						((int) event.getY())) == 0) {// 判断点击处像素的颜色是否为0，0表示没
-					// //内容
-					return false;
-				} else {
-//					Log.e("MainActivity",
-//							"点击区有图像4    "
-//									+ rbitmap_.getPixel((int) (event.getX()),
-//											((int) event.getY())));
-
-					joytip_.setText("下");
+				String tip = "";
+				if(bpress)
+				{
+					tip = " DOWN";
 				}
-				return false;
+				else
+				{
+					tip = " UP";
+				}
+				Log.w("Keyword", "下" + tip);
 			}
+			
 		});
+		
+		rtmpbtn.AddBrother(tmpbtn);
 	}
-
-	ImageButton selectbtn_;
-	Bitmap selectbitmap_;
-
-	ImageButton startbtn_;
-	Bitmap startbitmap_;
 
 	TextView funtip_;
 
 	void InitFunbtn() {
 		funtip_ = (TextView) findViewById(R.id.funtip);
 
-		selectbtn_ = (ImageButton) findViewById(R.id.imgselectbtn);
-		selectbitmap_ = ((BitmapDrawable) (selectbtn_.getDrawable())).getBitmap();// 得到ImageButton的图片
+		BtnInfo tmpbtn = new BtnInfo("imgselectbtn", this, R.id.imgselectbtn, false, listener_);
 
-		selectbtn_.setOnTouchListener(new OnTouchListener() {
+		btns.add(tmpbtn);
+
+		tmpbtn.SetClickEvent(new BtnClick() {
 
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public void OnClick(boolean bpress) {
 				// TODO Auto-generated method stub
-				if (selectbitmap_.getPixel((int) (event.getX()),
-						((int) event.getY())) == 0) {// 判断点击处像素的颜色是否为0，0表示没
-					// //内容
-					return false;
-				} else {
-					funtip_.setText("选择");
+				String tip = "";
+				if(bpress)
+				{
+					tip = " DOWN";
 				}
-				return false;
+				else
+				{
+					tip = " UP";
+				}
+				Log.w("Keyword", "选择" + tip);
 			}
 
 		});
 
-		startbtn_ = (ImageButton) findViewById(R.id.imgstartbtn);
-		startbitmap_ = ((BitmapDrawable) (startbtn_.getDrawable())).getBitmap();// 得到ImageButton的图片
+		tmpbtn = new BtnInfo("imgstartbtn", this, R.id.imgstartbtn, false, listener_);
 
-		startbtn_.setOnTouchListener(new OnTouchListener() {
+		btns.add(tmpbtn);
+
+		tmpbtn.SetClickEvent(new BtnClick() {
 
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public void OnClick(boolean bpress) {
 				// TODO Auto-generated method stub
-				if (startbitmap_.getPixel((int) (event.getX()),
-						((int) event.getY())) == 0) {// 判断点击处像素的颜色是否为0，0表示没
-					// //内容
-					return false;
-				} else {
-					funtip_.setText("开始");
+				String tip = "";
+				if(bpress)
+				{
+					tip = " DOWN";
 				}
-				return false;
+				else
+				{
+					tip = " UP";
+				}
+				Log.w("Keyword", "开始" + tip);
 			}
 
 		});
-
 	}
-
-	ImageButton abtn_;
-
-	ImageButton bbtn_;
-
-	ImageButton xbtn_;
-
-	ImageButton ybtn_;
 
 	TextView othertip_;
 
 	void InitOtherbtn() {
 		othertip_ = (TextView) findViewById(R.id.othertip);
 
-		abtn_ = (ImageButton) findViewById(R.id.imgabtn);
+		BtnInfo tmpbtn = new BtnInfo("imgabtn", this, R.id.imgabtn, false, listener_);
 
-		abtn_.setOnClickListener(new OnClickListener() {
+		btns.add(tmpbtn);
+
+		tmpbtn.SetClickEvent(new BtnClick() {
 
 			@Override
-			public void onClick(View arg0) {
+			public void OnClick(boolean bpress) {
 				// TODO Auto-generated method stub
-				othertip_.setText("A");
+				String tip = "";
+				if(bpress)
+				{
+					tip = " DOWN";
+				}
+				else
+				{
+					tip = " UP";
+				}
+				Log.w("Keyword", "A" + tip);
 			}
 
 		});
 
-		bbtn_ = (ImageButton) findViewById(R.id.imgbbtn);
+		tmpbtn = new BtnInfo("imgbbtn", this, R.id.imgbbtn, false, listener_);
 
-		bbtn_.setOnClickListener(new OnClickListener() {
+		btns.add(tmpbtn);
+
+		tmpbtn.SetClickEvent(new BtnClick() {
 
 			@Override
-			public void onClick(View arg0) {
+			public void OnClick(boolean bpress) {
 				// TODO Auto-generated method stub
-				othertip_.setText("B");
+				String tip = "";
+				if(bpress)
+				{
+					tip = " DOWN";
+				}
+				else
+				{
+					tip = " UP";
+				}
+				Log.w("Keyword", "B" + tip);
 			}
 
 		});
+		
+		tmpbtn = new BtnInfo("imgxbtn", this, R.id.imgxbtn, false, listener_);
 
-		xbtn_ = (ImageButton) findViewById(R.id.imgxbtn);
+		btns.add(tmpbtn);
 
-		xbtn_.setOnClickListener(new OnClickListener() {
+		tmpbtn.SetClickEvent(new BtnClick() {
 
 			@Override
-			public void onClick(View arg0) {
+			public void OnClick(boolean bpress) {
 				// TODO Auto-generated method stub
-				othertip_.setText("X");
+				String tip = "";
+				if(bpress)
+				{
+					tip = " DOWN";
+				}
+				else
+				{
+					tip = " UP";
+				}
+				Log.w("Keyword", "X" + tip);
 			}
 
 		});
+		
+		tmpbtn = new BtnInfo("imgybtn", this, R.id.imgybtn, false, listener_);
 
-		ybtn_ = (ImageButton) findViewById(R.id.imgybtn);
+		btns.add(tmpbtn);
 
-		ybtn_.setOnClickListener(new OnClickListener() {
+		tmpbtn.SetClickEvent(new BtnClick() {
 
 			@Override
-			public void onClick(View arg0) {
+			public void OnClick(boolean bpress) {
 				// TODO Auto-generated method stub
-				othertip_.setText("Y");
+				String tip = "";
+				if(bpress)
+				{
+					tip = " DOWN";
+				}
+				else
+				{
+					tip = " UP";
+				}
+				Log.w("Keyword", "Y" + tip);
 			}
 
 		});
