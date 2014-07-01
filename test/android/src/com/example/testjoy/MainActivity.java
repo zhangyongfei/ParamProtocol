@@ -1,15 +1,28 @@
 package com.example.testjoy;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
@@ -31,38 +44,44 @@ public class MainActivity extends Activity implements ParamCallback {
 			System.err.println("WARNING: Could not load library!");
 		}
 	}
+	
+	Socket client_ = null;
+	OutputStream outToServer_ = null;
+	InputStream inFromServer_ = null;
 
 	public class ThreadTest extends Thread {
 
 		public void run() {
-			ParamArgs tmp = new ParamArgs();
-			tmp.AddArgs(new ParamArg(false));
-			tmp.AddArgs(new ParamArg((char) 1));
-			tmp.AddArgs(new ParamArg((short) 2));
-			tmp.AddArgs(new ParamArg((int) 3));
-			tmp.AddArgs(new ParamArg((long) 4));
-			tmp.AddArgs(new ParamArg((float) 5));
-			tmp.AddArgs(new ParamArg((double) 6));
-			byte[] array = new byte[1];
-			array[0] = 7;
-			tmp.AddArgs(new ParamArg(array));
-			tmp.AddArgs(new ParamArg("Hello World!"));
-			MainActivity.this.sock_.CallFunction("Test", tmp);
-			MainActivity.this.sock_.CheckConn();
+			byte[] buf = new byte[4096];
+			
+			while(true){
+				try {
+					int len = inFromServer_.read(buf);
+					
+					if(len <= 0){
+						inFromServer_.close();
+						break;
+					}
+					
+					sock_.InputData(buf);
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();					
+					break;
+				}				
+			}
 		}
 	}
 
 	private ParamSocket sock_ = new ParamSocket(this);
-	ThreadTest testthr = new ThreadTest();
+	ThreadTest testthr_ = new ThreadTest();
 	
 	boolean bpoint2_ = false;
 	
 	OnTouchListener listener_ = new OnTouchListener() {
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
-			//joytip_.setText("");
-			//funtip_.setText("");
-			//othertip_.setText("");
 			int action = event.getAction();
 			int pointerCount = event.getPointerCount();
 
@@ -107,30 +126,6 @@ public class MainActivity extends Activity implements ParamCallback {
 				}
 			    break;
 			case MotionEvent.ACTION_MOVE:
-				//Log.e("onTouch", "ACTION_MOVE");
-				/*for(BtnInfo info : MainActivity.this.btns){
-					try {
-						if(info.OnClick1(v, (int)event.getX(), (int)event.getY())){
-							break;
-						}
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						for(BtnInfo info2 : MainActivity.this.btns){
-							//info.GetLocation();
-							info2.OnClick2(new Point(v.getLeft(), v.getTop()), 
-									new Point((int)event.getX(), (int)event.getY()));
-						}
-						break;
-					}
-				}
-				
-				if(pointerCount == 2){
-					for(BtnInfo info : MainActivity.this.btns){
-						//info.GetLocation();
-						info.OnClick2(new Point(v.getLeft(), v.getTop()), 
-								new Point((int)event.getX(1), (int)event.getY(1)));
-					}
-				}*/
 			    break;
 			case MotionEvent.ACTION_POINTER_2_DOWN:
 				Log.e("onTouch", "ACTION_POINTER_2_DOWN(" + event.getX(1) + ", " + event.getY(1) + ")");
@@ -156,6 +151,24 @@ public class MainActivity extends Activity implements ParamCallback {
 			return false;
 		}
 	};
+	
+	final int left_key_ = 0;
+	final int right_key_ = 1;
+	final int up_key_ = 2;
+	final int down_key_ = 3;
+	final int select_key_ = 4;
+	final int start_key_ = 5;
+	final int a_key_ = 6;
+	final int b_key_ = 7;
+	final int x_key_ = 8;
+	final int y_key_ = 9;
+	
+	void keyword(int keyvalue, int keystatus){
+		ParamArgs args = new ParamArgs();
+		args.AddArgs(new ParamArg(keyvalue));
+		args.AddArgs(new ParamArg(keystatus));
+		sock_.CallFunction("key", args);
+	}
 
     List<BtnInfo> btns = new ArrayList<BtnInfo>();
 
@@ -177,10 +190,14 @@ public class MainActivity extends Activity implements ParamCallback {
 				if(bpress)
 				{
 					tip = " DOWN";
+					joytip_.setText("右");
+					keyword(right_key_, 0);
 				}
 				else
 				{
 					tip = " UP";
+					joytip_.setText("");
+					keyword(right_key_, 1);
 				}
 				Log.w("Keyword", "右" + tip);
 			}
@@ -198,10 +215,14 @@ public class MainActivity extends Activity implements ParamCallback {
 				if(bpress)
 				{
 					tip = " DOWN";
+					joytip_.setText("左");
+					keyword(left_key_, 0);
 				}
 				else
 				{
 					tip = " UP";
+					joytip_.setText("");
+					keyword(left_key_, 1);
 				}
 				Log.w("Keyword", "左" + tip);
 			}
@@ -222,10 +243,14 @@ public class MainActivity extends Activity implements ParamCallback {
 				if(bpress)
 				{
 					tip = " DOWN";
+					joytip_.setText("上");
+					keyword(up_key_, 0);
 				}
 				else
 				{
 					tip = " UP";
+					joytip_.setText("");
+					keyword(up_key_, 1);
 				}
 				Log.w("Keyword", "上" + tip);
 			}
@@ -246,10 +271,14 @@ public class MainActivity extends Activity implements ParamCallback {
 				if(bpress)
 				{
 					tip = " DOWN";
+					joytip_.setText("下");
+					keyword(down_key_, 0);
 				}
 				else
 				{
 					tip = " UP";
+					joytip_.setText("");
+					keyword(down_key_, 1);
 				}
 				Log.w("Keyword", "下" + tip);
 			}
@@ -277,10 +306,14 @@ public class MainActivity extends Activity implements ParamCallback {
 				if(bpress)
 				{
 					tip = " DOWN";
+					funtip_.setText("选择");
+					keyword(select_key_, 0);
 				}
 				else
 				{
 					tip = " UP";
+					funtip_.setText("");
+					keyword(select_key_, 1);
 				}
 				Log.w("Keyword", "选择" + tip);
 			}
@@ -300,10 +333,14 @@ public class MainActivity extends Activity implements ParamCallback {
 				if(bpress)
 				{
 					tip = " DOWN";
+					funtip_.setText("开始");
+					keyword(start_key_, 0);
 				}
 				else
 				{
 					tip = " UP";
+					funtip_.setText("");
+					keyword(start_key_, 1);
 				}
 				Log.w("Keyword", "开始" + tip);
 			}
@@ -329,10 +366,14 @@ public class MainActivity extends Activity implements ParamCallback {
 				if(bpress)
 				{
 					tip = " DOWN";
+					othertip_.setText("A");
+					keyword(a_key_, 0);
 				}
 				else
 				{
 					tip = " UP";
+					othertip_.setText("");
+					keyword(a_key_, 1);
 				}
 				Log.w("Keyword", "A" + tip);
 			}
@@ -352,10 +393,14 @@ public class MainActivity extends Activity implements ParamCallback {
 				if(bpress)
 				{
 					tip = " DOWN";
+					othertip_.setText("B");
+					keyword(b_key_, 0);
 				}
 				else
 				{
 					tip = " UP";
+					othertip_.setText("");
+					keyword(b_key_, 1);
 				}
 				Log.w("Keyword", "B" + tip);
 			}
@@ -375,10 +420,14 @@ public class MainActivity extends Activity implements ParamCallback {
 				if(bpress)
 				{
 					tip = " DOWN";
+					othertip_.setText("X");
+					keyword(x_key_, 0);
 				}
 				else
 				{
 					tip = " UP";
+					othertip_.setText("");
+					keyword(x_key_, 1);
 				}
 				Log.w("Keyword", "X" + tip);
 			}
@@ -398,10 +447,14 @@ public class MainActivity extends Activity implements ParamCallback {
 				if(bpress)
 				{
 					tip = " DOWN";
+					othertip_.setText("Y");
+					keyword(y_key_, 0);
 				}
 				else
 				{
 					tip = " UP";
+					othertip_.setText("");
+					keyword(y_key_, 1);
 				}
 				Log.w("Keyword", "Y" + tip);
 			}
@@ -442,36 +495,23 @@ public class MainActivity extends Activity implements ParamCallback {
 		InitFunbtn();
 		
 		InitOtherbtn();
-
-		/*
-		 * sock_.Create();
-		 * 
-		 * 
-		 * sock_.AddFunction("Test", new ExecuteInterface(){
-		 * 
-		 * @Override public void Execute(ParamArgs args) { // TODO
-		 * Auto-generated method stub int i = 0; int cnt = args.getCount();
-		 * 
-		 * for(i = 0; i < cnt; i++) { ParamArg arg = args.getArg(i);
-		 * switch(arg.getType()){ case ParamArg.boolean_type_: {
-		 * Log.e("MainActivity", "boolean:" + arg.getBoolean() + "\n"); }break;
-		 * case ParamArg.char_type_: { Log.e("MainActivity", "char:" +
-		 * ((int)arg.getChar()) + "\n"); }break; case ParamArg.short_type_: {
-		 * Log.e("MainActivity", "short:" + arg.getShort() + "\n"); }break; case
-		 * ParamArg.int_type_: { Log.e("MainActivity", "int:" + arg.getInt() +
-		 * "\n"); }break; case ParamArg.long_type_: { Log.e("MainActivity",
-		 * "long:" + arg.getLong() + "\n"); }break; case ParamArg.float_type_: {
-		 * Log.e("MainActivity", "float:" + arg.getFloat() + "\n"); }break; case
-		 * ParamArg.double_type_: { Log.e("MainActivity", "double:" +
-		 * arg.getDouble() + "\n"); }break; case ParamArg.string_type_: {
-		 * Log.e("MainActivity", "string:" + arg.getString() + "\n"); }break;
-		 * case ParamArg.bytearray_type_: { for (byte x : arg.getByteArray()) {
-		 * Log.e("MainActivity", "bytearray:" + x + "\n"); } }break; } } }
-		 * 
-		 * });
-		 * 
-		 * testthr.start(); //
-		 */
+		
+		try {
+			client_ = new Socket("10.192.1.192", 50000);
+			
+			outToServer_ = client_.getOutputStream();  
+			inFromServer_ = client_.getInputStream();
+			
+			sock_.Create();
+			testthr_.start();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Log.e("Socket", e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -484,7 +524,12 @@ public class MainActivity extends Activity implements ParamCallback {
 	@Override
 	public void SendCallback(byte[] data) {
 		// TODO Auto-generated method stub
-		sock_.InputData(data);
+		try {
+			outToServer_.write(data);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

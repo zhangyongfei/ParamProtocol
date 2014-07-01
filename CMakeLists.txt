@@ -17,11 +17,14 @@ ${CMAKE_CURRENT_LIST_DIR}/Java
 AddHDirWin32(
 "$ENV{JAVA_HOME}/include"
 "$ENV{JAVA_HOME}/include/win32"
+${CMAKE_CURRENT_LIST_DIR}/test/c++
 )
 AddHDirAndroid(
 $ENV{ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/include/backward
 $ENV{ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/4.8/include/backward
 )
+
+AddLibDirsWin32(${CMAKE_CURRENT_LIST_DIR}/test/c++)
 
 AddSrcDir(SOURCE_LIST 
 ${CMAKE_CURRENT_LIST_DIR}
@@ -41,6 +44,7 @@ ${CMAKE_CURRENT_LIST_DIR}/test/c++/TestClient.h)
 
 AddLibsWin32(TEST_LIB_LIST
 ParamProtocol
+vJoyInterface
 ws2_32
 )
 

@@ -27,6 +27,7 @@ int TestServer::CreateServer(int port){
 	sockaddr_in addr;
     addr.sin_family = AF_INET;
 	addr.sin_port = htons(port);
+	addr.sin_addr.s_addr = INADDR_ANY;
 
 	if (::bind(sock_, (struct sockaddr *)&addr, sizeof(sockaddr)) == SOCKET_ERROR){
 		return -1;
