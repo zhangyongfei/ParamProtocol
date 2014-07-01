@@ -1,35 +1,9 @@
 #include <stdio.h>
 #include "ParamSocket.h"
 #include "ParamExecutor.h"
+#include "TestServer.h"
 
 using namespace yeguang;
-
-int SendCallback(const char * const data, int data_len, void* context)
-{
-	ParamSocket *sock = (ParamSocket *)context;
-
-	sock->InputData(data, data_len);
-
-	return 0;
-}
-
-int Recvallback(uint32_t function_id, ParamArgs& args, void* context)
-{
-	const TParamInfo* info = ParamExecutor::Instance()->GetParamInfo(function_id);
-
-	if (info != NULL)
-	{
-		info->recv_callback_(function_id, args, info->context_);
-	}
-
-	return 0;
-}
-
-int CheckCallback(void* context)
-{
-	printf("CheckCallback\n");
-	return 0;
-}
 
 int Execute(uint32_t function_id, ParamArgs& args, void* context)
 {
@@ -91,31 +65,14 @@ int Execute(uint32_t function_id, ParamArgs& args, void* context)
 
 int main()
 {
-	ParamSocket *sock = ParamSocket::Create();
+	ParamExecutor::Instance()->AddRecvCB("Test", Execute, NULL);
 
-	sock->SetCheckCB(CheckCallback, sock);
-	sock->SetRecvCB(Recvallback, sock);
-	sock->SetSendCB(SendCallback, sock);
+	TestServer server;
 
-	ParamExecutor::Instance()->AddRecvCB("Test", Execute, sock);
-
-	ParamArgs args;
-
-	args.AddArg(ValueObject(false));
-	args.AddArg(ValueObject((char)1));
-	args.AddArg(ValueObject((short)2));
-	args.AddArg(ValueObject(3));
-	args.AddArg(ValueObject((int64_t)4));
-	args.AddArg(ValueObject(5.0f));
-	args.AddArg(ValueObject(6.0));
-	uint8_t buf[1] = {7};
-	args.AddArg(ValueObject(buf, sizeof(buf)));
-	args.AddArg(ValueObject("Hello World!"));
-
-	sock->CallFunction("Test", args);
-
-	sock->CheckConn();
+	server.CreateServer(5000);
 
     getchar();
+
+	server.DestroyServer();
 	return 0;
 }

@@ -32,10 +32,17 @@ SharedLib(ParamProtocol
 SOURCE_LIST
 LIB_LIST)
 
-SET(TEST_SOURCE_LIST ${CMAKE_CURRENT_LIST_DIR}/test/c++/test.cpp)
+SET(TEST_SOURCE_LIST 
+${CMAKE_CURRENT_LIST_DIR}/test/c++/test.cpp
+${CMAKE_CURRENT_LIST_DIR}/test/c++/TestServer.cpp
+${CMAKE_CURRENT_LIST_DIR}/test/c++/TestServer.h
+${CMAKE_CURRENT_LIST_DIR}/test/c++/TestClient.cpp
+${CMAKE_CURRENT_LIST_DIR}/test/c++/TestClient.h)
 
 AddLibsWin32(TEST_LIB_LIST
-ParamProtocol)
+ParamProtocol
+ws2_32
+)
 
 AppPrj(testcpp
 TEST_SOURCE_LIST

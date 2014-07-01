@@ -6,7 +6,7 @@ public class ParamSocket {
 
 	private long sock_ = 0;
 	private ParamCallback callback_ = null;
-	private HashMap<Integer, ExecuteInterface> exectab_ = new HashMap<Integer, ExecuteInterface>();
+	private static HashMap<Integer, ExecuteInterface> exectab_ = new HashMap<Integer, ExecuteInterface>();
 	
 	public ParamSocket(ParamCallback callback){
 		callback_ = callback;
