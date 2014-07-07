@@ -192,8 +192,16 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 			jstring tmpvalue = (jstring)env->CallObjectMethod(arg, mid);
 
 			char *name = jstringTostring(env, tmpvalue);
-			valueobj = yeguang::ValueObject(name);
-			free(name);
+			if (name != NULL)
+			{
+				valueobj = yeguang::ValueObject(name);
+				free(name);
+			}	
+			else
+			{
+				valueobj = yeguang::ValueObject("");
+			}
+
 
 			res = true;
 		}break;
@@ -205,9 +213,17 @@ bool GetArg(JNIEnv *env, jobject args, int index, yeguang::ValueObject& valueobj
 			jbyteArray tmpvalue = (jbyteArray)env->CallObjectMethod(arg, mid);
 
 			jbyte *data = (jbyte*)env->GetByteArrayElements(tmpvalue, 0);
-			jsize len = env->GetArrayLength(tmpvalue);
-			valueobj = yeguang::ValueObject((uint8_t*)data, len);
-			env->ReleaseByteArrayElements(tmpvalue, data, 0);
+			if (data != NULL)
+			{
+				jsize len = env->GetArrayLength(tmpvalue);
+				valueobj = yeguang::ValueObject((uint8_t*)data, len);
+				env->ReleaseByteArrayElements(tmpvalue, data, 0);
+			}
+			else
+			{
+				uint8_t buffer[1] = {0};
+				valueobj = yeguang::ValueObject((uint8_t*)buffer, 0);
+			}
 
 			res = true;
 		}break;
@@ -448,6 +464,8 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_CallFunction
 	int i = 0;
 	yeguang::ParamArgs params;	
 
+	dprint("-count:%d---\n", count);
+
 	for (i = 0; i < count; i++)
 	{
 		yeguang::ValueObject tmpvalue;
@@ -456,6 +474,8 @@ JNIEXPORT void JNICALL Java_com_yeguang_paramprotocol_ParamSocket_CallFunction
 			params.AddArg(tmpvalue);
 		}
 	}
+
+	dprint("-CallFunction:%d---\n", count);
 
 	sock->CallFunction(strname, params);
 }

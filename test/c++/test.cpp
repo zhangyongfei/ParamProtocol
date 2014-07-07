@@ -21,9 +21,33 @@ using namespace yeguang;
 #define XKEY     8
 #define YKEY     9
 
+//UTF-8 GBK  
+int UTF82GBK(char *szUtf8,char *szGbk,int Len)  
+{  
+	int n = MultiByteToWideChar(CP_UTF8, 0, szUtf8, -1, NULL, 0);  
+	WCHAR * wszGBK = new WCHAR[sizeof(WCHAR) * n];  
+	memset(wszGBK, 0, sizeof(WCHAR) * n);  
+	MultiByteToWideChar(CP_UTF8, 0,szUtf8,-1, wszGBK, n);  
+
+	n = WideCharToMultiByte(CP_ACP, 0, wszGBK, -1, NULL, 0, NULL, NULL);  
+	if (n > Len)  
+	{  
+		delete[]wszGBK;  
+		return -1;  
+	}  
+
+	WideCharToMultiByte(CP_ACP,0, wszGBK, -1, szGbk, n, NULL, NULL);  
+
+	delete[]wszGBK;  
+	wszGBK = NULL;  
+
+	return 0;  
+} 
+
 int Execute(uint32_t function_id, ParamArgs& args, void* context)
 {
-	/*int i = 0;
+	//*
+	int i = 0;
 
 	for (i = 0; i < args.GetArgCount(); i++)
 	{
@@ -61,7 +85,9 @@ int Execute(uint32_t function_id, ParamArgs& args, void* context)
 			}break;
 		case yeguang::STRINGVALUE:
 			{
-				printf("string:%s\n", vobj.GetString().c_str());
+				char buffer[4096] = {0};
+				UTF82GBK((char *)vobj.GetString().c_str(), buffer, sizeof(buffer));
+				printf("string:%s\n", buffer);
 			}break;
 		case yeguang::BYTEARRAY:
 			{
@@ -74,8 +100,10 @@ int Execute(uint32_t function_id, ParamArgs& args, void* context)
 		default:
 			break;
 		}
-	}*/
+	}
+	//*/
 
+	/*
 	int keyvalue = args.GetArg(0).GetInt();
 	int status = args.GetArg(1).GetInt();
 	std::string strkey = "";
@@ -180,11 +208,14 @@ int Execute(uint32_t function_id, ParamArgs& args, void* context)
 		}
 	}
 
+	//*/
+
 	return 0;
 }
 
 int main()
 {
+	/*
 	USHORT X, Y, Z, ZR, XR;							// Position of several axes
 	JOYSTICK_POSITION	iReport;					// The structure that holds the full position data
 	BYTE id=1;										// ID of the target vjoy device (Default is 1)
@@ -275,7 +306,7 @@ int main()
 
 	int res = 0;
 
-	/*while(1)
+	while(1)
 	{
 		// Set position of 4 axes
 		//res = SetAxis(X, 1, HID_USAGE_X);
@@ -310,7 +341,7 @@ int main()
 
 		// If Discrete POV hat switches installed - make them go round
 		// From time to time - put the switches in neutral state
-		/*if (DiscPovNumber)
+		if (DiscPovNumber)
 		{
 			if (count < 550)
 			{
@@ -335,9 +366,10 @@ int main()
 		ZR-=200;
 		count++;
 		if (count > 640) count=0;
-	} // While*/
+	} // While
+	*/
 
-	ParamExecutor::Instance()->AddRecvCB("key", Execute, NULL);
+	ParamExecutor::Instance()->AddRecvCB("ime", Execute, NULL);
 
 	TcpServer server;
 

@@ -58,8 +58,8 @@ unsigned long WINAPI SvrConnection::RecvThread(void* context){
 			ClientVector::iterator iter = pthis->server_->clients_.begin();
 			while (iter != pthis->server_->clients_.end()){
 				if (*iter == pthis){
-					delete pthis;
                     pthis->server_->clients_.erase(iter);
+					delete pthis;
 					break;
 				}
 				iter++;

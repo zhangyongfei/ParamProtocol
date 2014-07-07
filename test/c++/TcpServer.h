@@ -6,6 +6,11 @@
 
 class SvrConnection;
 
+namespace yeguang{
+	class ParamSocket;
+}
+
+
 typedef std::vector<SvrConnection*> ClientVector;
 
 typedef void (*AcceptCB)(sockaddr_in addr, yeguang::ParamSocket* conn, void* context);
