@@ -1,18 +1,21 @@
-#include "TestServer.h"
-#include "TestClient.h"
+#include "TcpServer.h"
+#include "SvrConnection.h"
 
-TestServer::TestServer(){
+TcpServer::TcpServer(){
     WSADATA wsadata;
 	::WSAStartup(0x0002, &wsadata);
 
 	sock_ = INVALID_SOCKET;
+
+	acceptcb_ = NULL;
+	accept_context_ = NULL;
 }
 
-TestServer::~TestServer(){
+TcpServer::~TcpServer(){
 	::WSACleanup();
 }
 
-int TestServer::CreateServer(int port){
+int TcpServer::CreateServer(int port){
     if (sock_ != INVALID_SOCKET){
 		::closesocket(sock_);
 		sock_ = INVALID_SOCKET;
@@ -41,7 +44,7 @@ int TestServer::CreateServer(int port){
 	return 0;
 }
 
-int TestServer::DestroyServer(){
+int TcpServer::DestroyServer(){
 
 	ClientVector::iterator iter = clients_.begin();
 	while (iter != clients_.end()){
@@ -63,22 +66,35 @@ int TestServer::DestroyServer(){
 }
 
 
-unsigned long WINAPI TestServer::AcceptThread(void* context){
-    TestServer *pthis = (TestServer *)context;
+unsigned long WINAPI TcpServer::AcceptThread(void* context){
+    TcpServer *pthis = (TcpServer *)context;
 
 	while(pthis->bstatus_){
-		SOCKET tmpsock = ::accept(pthis->sock_, NULL, NULL);
+		sockaddr_in addr;
+		int len = sizeof(addr);
+		SOCKET tmpsock = ::accept(pthis->sock_, (sockaddr*)&addr, &len);
 
 		if (tmpsock != INVALID_SOCKET){
-             TestClient *client = new TestClient(pthis);
-
-			 client->Init(tmpsock);
+             SvrConnection *client = new SvrConnection(pthis);
+			 
+			 yeguang::ParamSocket *param = client->Init(tmpsock);
 
 			 pthis->clients_.push_back(client);
+
+			 if (pthis->acceptcb_)
+			 {
+				 pthis->acceptcb_(addr, param, pthis->accept_context_);
+			 }
 		}
 	}
 
 	return 0;
+}
+
+void TcpServer::SetAcceptCB(AcceptCB acceptcb, void* context)
+{
+	acceptcb_ = acceptcb;
+	accept_context_ = context;
 }
 
 

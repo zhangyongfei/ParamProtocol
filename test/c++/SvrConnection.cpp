@@ -1,13 +1,13 @@
-#include "TestClient.h"
-#include "TestServer.h"
+#include "SvrConnection.h"
+#include "TcpServer.h"
 
 
-TestClient::TestClient(TestServer* server){
+SvrConnection::SvrConnection(TcpServer* server){
     server_ = server;
 	param_ = NULL;
 }
 
-TestClient::~TestClient(){
+SvrConnection::~SvrConnection(){
     if (param_ != NULL)
     {
 		delete param_;
@@ -15,7 +15,7 @@ TestClient::~TestClient(){
     }
 }
 
-void TestClient::Init(SOCKET sock){
+yeguang::ParamSocket* SvrConnection::Init(SOCKET sock){
     sock_ = sock;
 
 	param_ = yeguang::ParamSocket::Create();
@@ -26,16 +26,17 @@ void TestClient::Init(SOCKET sock){
 
 	bstatus = true;
 	CreateThread(NULL, 0, RecvThread, this, 0, NULL);
+	return param_;
 }
 
-void TestClient::Exit(){
+void SvrConnection::Exit(){
     if (sock_ != INVALID_SOCKET){
 		::closesocket(sock_);
 		sock_ = INVALID_SOCKET;
     }
 }
 
-int TestClient::SendData(const char* const data, int len){
+int SvrConnection::SendData(const char* const data, int len){
 	if(sock_ == INVALID_SOCKET){
         return -1;
 	}
@@ -43,8 +44,8 @@ int TestClient::SendData(const char* const data, int len){
 	return ::send(sock_, data, len, 0);
 }
 
-unsigned long WINAPI TestClient::RecvThread(void* context){
-    TestClient *pthis = (TestClient *)context;
+unsigned long WINAPI SvrConnection::RecvThread(void* context){
+    SvrConnection *pthis = (SvrConnection *)context;
     int len = 0;
 	char buffer[4096] = {0};
 
@@ -73,16 +74,16 @@ unsigned long WINAPI TestClient::RecvThread(void* context){
 	return 0;
 }
 
-int TestClient::SendCallback(const char * const data, int data_len, void* context)
+int SvrConnection::SendCallback(const char * const data, int data_len, void* context)
 {
-	TestClient *pthis = (TestClient *)context;
+	SvrConnection *pthis = (SvrConnection *)context;
 
 	pthis->SendData(data, data_len);
 
 	return 0;
 }
 
-int TestClient::Recvallback(uint32_t function_id, yeguang::ParamArgs& args, void* context)
+int SvrConnection::Recvallback(uint32_t function_id, yeguang::ParamArgs& args, void* context)
 {
 	const yeguang::TParamInfo* info = yeguang::ParamExecutor::Instance()->GetParamInfo(function_id);
 
@@ -94,9 +95,9 @@ int TestClient::Recvallback(uint32_t function_id, yeguang::ParamArgs& args, void
 	return 0;
 }
 
-int TestClient::CheckCallback(void* context)
+int SvrConnection::CheckCallback(void* context)
 {
-	TestClient *pthis = (TestClient *)context;
+	SvrConnection *pthis = (SvrConnection *)context;
 
 	pthis->param_->CheckConn();
 

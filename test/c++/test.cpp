@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "ParamSocket.h"
 #include "ParamExecutor.h"
-#include "TestServer.h"
+#include "TcpServer.h"
 #include <string>
 #include "public.h"
 #include "vjoyinterface.h"
@@ -339,7 +339,7 @@ int main()
 
 	ParamExecutor::Instance()->AddRecvCB("key", Execute, NULL);
 
-	TestServer server;
+	TcpServer server;
 
 	server.CreateServer(50000);
 

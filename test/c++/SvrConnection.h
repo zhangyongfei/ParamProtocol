@@ -4,14 +4,14 @@
 #include "ParamSocket.h"
 #include "ParamExecutor.h"
 
-class TestServer;
+class TcpServer;
 
-class TestClient{
+class SvrConnection{
 public:
-	TestClient(TestServer* server);
-	~TestClient();
+	SvrConnection(TcpServer* server);
+	~SvrConnection();
 
-	void Init(SOCKET sock);
+	yeguang::ParamSocket* Init(SOCKET sock);
     void Exit();
 
 protected:
@@ -27,7 +27,7 @@ private:
 
 	yeguang::ParamSocket *param_;
 
-	TestServer* server_;
+	TcpServer* server_;
 
 	bool bstatus;
 };

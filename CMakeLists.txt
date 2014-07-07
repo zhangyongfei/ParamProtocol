@@ -11,6 +11,7 @@ stdc++
 log)
 
 AddHDir(
+${CMAKE_CURRENT_LIST_DIR}
 ${CMAKE_CURRENT_LIST_DIR}/ParamArgs 
 ${CMAKE_CURRENT_LIST_DIR}/Java
 )
@@ -37,10 +38,10 @@ LIB_LIST)
 
 SET(TEST_SOURCE_LIST 
 ${CMAKE_CURRENT_LIST_DIR}/test/c++/test.cpp
-${CMAKE_CURRENT_LIST_DIR}/test/c++/TestServer.cpp
-${CMAKE_CURRENT_LIST_DIR}/test/c++/TestServer.h
-${CMAKE_CURRENT_LIST_DIR}/test/c++/TestClient.cpp
-${CMAKE_CURRENT_LIST_DIR}/test/c++/TestClient.h)
+${CMAKE_CURRENT_LIST_DIR}/test/c++/TcpServer.cpp
+${CMAKE_CURRENT_LIST_DIR}/test/c++/TcpServer.h
+${CMAKE_CURRENT_LIST_DIR}/test/c++/SvrConnection.cpp
+${CMAKE_CURRENT_LIST_DIR}/test/c++/SvrConnection.h)
 
 AddLibsWin32(TEST_LIB_LIST
 ParamProtocol
